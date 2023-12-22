@@ -5,8 +5,8 @@ from pprint import pprint
 
 from sqlalchemy import select
 
-from models.access.connector import AccessDatabaseConnector
-from models.access.model import AccessWordSpell as WordSpell
+from app.models.access.connector import AccessDatabaseConnector
+from app.models.access.model import AccessWordSpell as WordSpell
 
 if __name__ == "__main__":
     MDB_URI = os.environ.get("MDB_DATABASE_URL")

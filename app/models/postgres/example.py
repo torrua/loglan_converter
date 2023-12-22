@@ -3,7 +3,7 @@
 import os
 from pprint import pprint
 from loglan_core.addons.word_selector import WordSelector
-from models.postgres.connector import PostgresDatabaseConnector
+from app.models.postgres.connector import PostgresDatabaseConnector
 
 
 if __name__ == "__main__":
