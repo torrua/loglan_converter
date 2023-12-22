@@ -22,5 +22,4 @@ class TextConnector:
     def is_path(path: str) -> bool:
         if os.path.exists(path):
             return True
-        else:
-            raise FileNotFoundError("Directory not found")
+        raise FileNotFoundError("Directory not found")
