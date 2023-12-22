@@ -7,23 +7,23 @@ from sqlalchemy.orm import sessionmaker, Session
 
 
 class PostgresDatabaseConnector:
-    def __init__(self, uri: str):
-        if self.is_uri(uri):
-            self.engine = self.get_engine(uri)
+    def __init__(self, path: str):
+        if self.is_path(path):
+            self.engine = self.get_engine(path)
 
     @classmethod
-    def get_engine(cls, uri: str) -> Engine:
-        return create_engine(uri)
+    def get_engine(cls, path: str) -> Engine:
+        return create_engine(path)
 
     def session(self) -> Session:
         return sessionmaker(bind=self.engine, future=True)()
 
     @staticmethod
-    def is_uri(uri) -> bool:
-        if not uri:
+    def is_path(path: str) -> bool:
+        if not path:
             raise ValueError("No Postgresql URI provided. Please check your environment.")
 
         pattern = r"^postgres(?:ql)?://"
-        if re.match(pattern, uri) is None:
-            raise ValueError(f"Invalid Postgresql URI:\n\t{uri}")
+        if re.match(pattern, path) is None:
+            raise ValueError(f"Invalid Postgresql URI:\n\t{path}")
         return True
