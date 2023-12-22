@@ -1,4 +1,4 @@
-from database_interface import DatabaseInterface
+from interfaces.database_interface import DatabaseInterface
 
 
 class TextInterface(DatabaseInterface):
