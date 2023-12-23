@@ -3,14 +3,14 @@ from __future__ import annotations
 from typing import NamedTuple, Any
 
 
-class ItemCollectionData(NamedTuple):
+class TableProperties(NamedTuple):
     order: int
     name: str
     pattern: list[Any]
 
 
-default_item_collection_data = (
-    ItemCollectionData(
+DEFAULT_TABLE_PROPERTIES_COLLECTION = (
+    TableProperties(
         1,
         "Author",
         [
@@ -19,7 +19,7 @@ default_item_collection_data = (
             str | None,  # notes
         ],
     ),
-    ItemCollectionData(
+    TableProperties(
         2,
         "LexEvent",
         [
@@ -31,7 +31,7 @@ default_item_collection_data = (
             str | None,  # suffix
         ],
     ),
-    ItemCollectionData(
+    TableProperties(
         3,
         "Type",
         [
@@ -42,7 +42,7 @@ default_item_collection_data = (
             str | None,  # description
         ],
     ),
-    ItemCollectionData(
+    TableProperties(
         4,
         "Words",
         [
@@ -60,7 +60,7 @@ default_item_collection_data = (
             int | None,  # tid_old
         ],
     ),
-    ItemCollectionData(
+    TableProperties(
         5,
         "WordSpell",
         [
@@ -73,7 +73,7 @@ default_item_collection_data = (
             str | None,  # origin_x
         ],
     ),
-    ItemCollectionData(
+    TableProperties(
         6,
         "WordDefinition",
         [
@@ -86,7 +86,7 @@ default_item_collection_data = (
             str | None,  # case_tags
         ],
     ),
-    ItemCollectionData(
+    TableProperties(
         7,
         "Settings",
         [
@@ -96,7 +96,7 @@ default_item_collection_data = (
             str,  # db_release
         ],
     ),
-    ItemCollectionData(
+    TableProperties(
         8,
         "Syllable",
         [
