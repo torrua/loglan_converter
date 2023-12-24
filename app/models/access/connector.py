@@ -14,7 +14,8 @@ class AccessDatabaseConnector:
 
     def __init__(self, path: str):
         if self.is_path(path):
-            self.engine = self.get_engine(path)
+            self.path = path
+            self.engine = self.get_engine(self.path)
 
     @classmethod
     def get_engine(cls, path: str) -> Engine:
