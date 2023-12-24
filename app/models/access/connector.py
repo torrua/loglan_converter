@@ -12,13 +12,14 @@ class AccessDatabaseConnector:
         r"DRIVER={{Microsoft Access Driver (*.mdb, *.accdb)}};DBQ={};ExtendedAnsiSQL=1;"
     )
 
-    def __init__(self, db_path: str):
-        if self.is_uri(db_path):
-            self.engine = self.get_engine(db_path)
+    def __init__(self, path: str):
+        if self.is_path(path):
+            self.path = path
+            self.engine = self.get_engine(self.path)
 
     @classmethod
-    def get_engine(cls, db_path: str) -> Engine:
-        connection_string = cls.DRIVER.format(db_path)
+    def get_engine(cls, path: str) -> Engine:
+        connection_string = cls.DRIVER.format(path)
         connection_url = (
             f"access+pyodbc:///?odbc_connect={quote_plus(connection_string)}"
         )
@@ -28,13 +29,13 @@ class AccessDatabaseConnector:
         return sessionmaker(bind=self.engine)()
 
     @staticmethod
-    def is_uri(uri) -> bool:
-        if not uri:
+    def is_path(path: str) -> bool:
+        if not path:
             raise ValueError(
                 "No Microsoft Access URI provided. Please check your environment."
             )
 
         pattern = r"^.*\.mdb|accdb$"
-        if re.match(pattern, uri) is None:
-            raise ValueError(f"Invalid Microsoft Access URI:\n\t{uri}")
+        if re.match(pattern, path) is None:
+            raise ValueError(f"Invalid Microsoft Access URI:\n\t{path}")
         return True

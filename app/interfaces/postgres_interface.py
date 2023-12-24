@@ -1,4 +1,4 @@
-from database_interface import DatabaseInterface
+from app.interfaces.database_interface import DatabaseInterface
 
 
 class PostgresInterface(DatabaseInterface):
