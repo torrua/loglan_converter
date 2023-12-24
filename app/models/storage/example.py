@@ -17,10 +17,8 @@ if __name__ == "__main__":
         ]
     )
 
-    storage.word.append(
-        ["13", "D-Prim", "Predicate", "", "", "JCB", "1991", "10+", "cervu", "", "", ""]
-    )
+    item = ["13", "D-Prim", "Predicate", "", "", "JCB", "1991", "10", "cervu", "", "", ""]
+    prepared_item = storage.word.convert_item_elements(item)
 
-    from pprint import pprint
-
-    pprint(storage)
+    [print(a, b) for a, b in zip(storage.word.pattern, prepared_item)]
+    print(storage.word.is_proper_pattern(prepared_item))
