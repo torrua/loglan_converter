@@ -48,6 +48,18 @@ class BaseModel(DeclarativeBase):
     def export_data(self):
         pass
 
+    @staticmethod
+    def value_or_none(value):
+        return value if value else None
+
+    von = value_or_none
+
+    @staticmethod
+    def value_or_empty_string(value):
+        return value if value else ""
+
+    ves = value_or_empty_string
+
 
 class AccessAuthor(BaseModel):
     """
@@ -63,14 +75,14 @@ class AccessAuthor(BaseModel):
     notes = Column(String(128))
 
     def export_data(self):
-        return f"{self.abbreviation}@{self.full_name}@{self.notes or ''}"
+        return f"{self.abbreviation}@{self.full_name}@{self.ves(self.notes)}"
 
-    @staticmethod
-    def import_data(item: list[str]):
+    @classmethod
+    def import_data(cls, item: list[str]):
         return {
             "abbreviation": item[0],
-            "full_name": item[1] or None,
-            "notes": item[2] or None,
+            "full_name": cls.von(item[1]),
+            "notes": cls.von(item[2]),
         }
 
 
@@ -89,20 +101,24 @@ class AccessDefinition(BaseModel):
 
     def export_data(self):
         return (
-            f"{self.word_id}@{self.position}@{self.usage or ''}"
-            f"@{self.grammar or ''}@{self.body}@@{self.case_tags or ''}"
+            f"{self.word_id}@"
+            f"{self.position}@"
+            f"{self.ves(self.usage)}@"
+            f"{self.ves(self.grammar)}@"
+            f"{self.body}@@"
+            f"{self.ves(self.case_tags)}"
         )
 
-    @staticmethod
-    def import_data(item: list[str]):
+    @classmethod
+    def import_data(cls, item: list[str]):
         return {
             "word_id": int(item[0]),
             "position": int(item[1]),
-            "usage": item[2] or None,
-            "grammar": item[3] or None,
+            "usage": cls.von(item[2]),
+            "grammar": cls.von(item[3]),
             "body": item[4],
-            "main": item[5] or None,
-            "case_tags": item[6] or None,
+            "main": cls.von(item[5]),
+            "case_tags": cls.von(item[6]),
         }
 
 
@@ -123,21 +139,23 @@ class AccessEvent(BaseModel):
 
     def export_data(self):
         return (
-            f"{self.id}@{self.name}"
-            f"@{self.date}@{self.definition}"
-            f"@{self.annotation or ''}"
-            f"@{self.suffix or ''}"
+            f"{self.id}@"
+            f"{self.name}@"
+            f"{self.date}@"
+            f"{self.definition}@"
+            f"{self.ves(self.annotation)}@"
+            f"{self.ves(self.suffix)}"
         )
 
-    @staticmethod
-    def import_data(item: list[str]):
+    @classmethod
+    def import_data(cls, item: list[str]):
         return {
             "id": int(item[0]),
             "name": item[1],
             "date": item[2],
             "definition": item[3],
-            "annotation": item[4] or None,
-            "suffix": item[5] or None,
+            "annotation": cls.von(item[4]),
+            "suffix": cls.von(item[5]),
         }
 
 
@@ -156,8 +174,10 @@ class AccessSetting(BaseModel):
 
     def export_data(self):
         return (
-            f"{self.date.strftime('%d.%m.%Y %H:%M:%S')}"
-            f"@{self.db_version}@{self.last_word_id}@{self.db_release}"
+            f"{self.date.strftime('%d.%m.%Y %H:%M:%S')}@"
+            f"{self.db_version}@"
+            f"{self.last_word_id}@"
+            f"{self.db_release}"
         )
 
     @staticmethod
@@ -212,18 +232,21 @@ class AccessType(BaseModel):
 
     def export_data(self):
         return (
-            f"{self.type}@{self.type_x}@{self.group}@{self.parentable}"
-            f"@{self.description or ''}"
+            f"{self.type}@"
+            f"{self.type_x}@"
+            f"{self.group}@"
+            f"{self.parentable}@"
+            f"{self.ves(self.description)}"
         )
 
-    @staticmethod
-    def import_data(item: list[str]):
+    @classmethod
+    def import_data(cls, item: list[str]):
         return {
             "type": item[0],
             "type_x": item[1],
-            "group": item[2] or None,
+            "group": cls.von(item[2]),
             "parentable": ast.literal_eval(item[3]),
-            "description": item[4] or "",
+            "description": cls.von(item[4]),  # TODO: check - or von?
         }
 
 
@@ -255,33 +278,35 @@ class AccessWord(BaseModel):
         """
 
         return (
-            f"{self.word_id}@{self.type}@{self.type_x}"
-            f"@{self.affixes or ''}"
-            f"@{self.match or ''}"
-            f"@{self.authors}"
-            f"@{self.year}"
-            f"@{self.rank or ''}"
-            f"@{self.origin or ''}"
-            f"@{self.origin_x or ''}"
-            f"@{self.used_in or ''}"
-            f"@{self.TID_old or ''}"
+            f"{self.word_id}@"
+            f"{self.type}@"
+            f"{self.type_x}@"
+            f"{self.ves(self.affixes)}@"
+            f"{self.ves(self.match)}@"
+            f"{self.authors}@"
+            f"{self.year}@"
+            f"{self.ves(self.rank)}@"
+            f"{self.ves(self.origin)}@"
+            f"{self.ves(self.origin_x)}@"
+            f"{self.ves(self.used_in)}@"
+            f"{self.ves(self.TID_old)}"
         )
 
-    @staticmethod
-    def import_data(item: list[str]):
+    @classmethod
+    def import_data(cls, item: list[str]):
         return {
             "word_id": int(item[0]),
             "type": item[1],
             "type_x": item[2],
-            "affixes": item[3] or None,
-            "match": item[4] or None,
-            "authors": item[5] or None,
-            "year": item[6] or None,
-            "rank": item[7] or None,
-            "origin": item[8] or None,
-            "origin_x": item[9] or None,
-            "used_in": item[10] or None,
-            "TID_old": int(item[11]) or None,
+            "affixes": cls.von(item[3]),
+            "match": cls.von(item[4]),
+            "authors": cls.von(item[5]),
+            "year": cls.von(item[6]),
+            "rank": cls.von(item[7]),
+            "origin": cls.von(item[8]),
+            "origin_x": cls.von(item[9]),
+            "used_in": cls.von(item[10]),
+            "TID_old": cls.von(int(item[11])),
         }
 
 
@@ -307,12 +332,17 @@ class AccessWordSpell(BaseModel):
         """
         code_name = "".join(["0" if symbol.isupper() else "5" for symbol in self.word])
         return (
-            f"{self.word_id}@{self.word}@{self.word.lower()}@{code_name}"
-            f"@{self.event_start_id}@{self.event_end_id}@{self.origin_x or ''}"
+            f"{self.word_id}@"
+            f"{self.word}@"
+            f"{self.word.lower()}@"
+            f"{code_name}@"
+            f"{self.event_start_id}@"
+            f"{self.event_end_id}@"
+            f"{self.ves(self.origin_x)}"
         )
 
-    @staticmethod
-    def import_data(item: list[str]):
+    @classmethod
+    def import_data(cls, item: list[str]):
         return {
             "word_id": int(item[0]),
             "word": item[1],
@@ -320,5 +350,5 @@ class AccessWordSpell(BaseModel):
             "sort_b": item[3],
             "event_start_id": int(item[4]),
             "event_end_id": int(item[5]),
-            "origin_x": item[6] or None,
+            "origin_x": cls.von(item[6]),
         }

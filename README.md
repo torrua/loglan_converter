@@ -1,3 +1,3 @@
 # Loglan Convert
 
-[![Pylint Models](https://github.com/torrua/loglan_convert/actions/workflows/pylint_models.yml/badge.svg)](https://github.com/torrua/loglan_convert/actions/workflows/pylint_models.yml)
+[![Pylint App](https://github.com/torrua/loglan_convert/actions/workflows/pylint_app.yml/badge.svg)](https://github.com/torrua/loglan_convert/actions/workflows/pylint_app.yml)

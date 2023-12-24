@@ -20,5 +20,6 @@ if __name__ == "__main__":
     item = ["13", "D-Prim", "Predicate", "", "", "JCB", "1991", "10", "cervu", "", "", ""]
     prepared_item = storage.word.convert_item_elements(item)
 
-    [print(a, b) for a, b in zip(storage.word.pattern, prepared_item)]
+    for a, b in zip(storage.word.pattern, prepared_item):
+        print(a, b)
     print(storage.word.is_proper_pattern(prepared_item))

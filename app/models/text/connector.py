@@ -55,13 +55,19 @@ class TextConnector:
         ]
 
     def path_by_name(self, name: str) -> str:
-        if name not in Storage().names:
-            raise FileNotFoundError(f"File '{name}' not found.")
         for file_path in self.files_paths:
             if file_path.endswith(f"{name}.{self.EXTENSION}"):
-                print(file_path)
                 return file_path
+        raise FileNotFoundError(f"File '{name}' not found.")
 
     def file_by_name(self, name: str) -> str:
-        with open(self.path_by_name(name), "r") as file:
+        """Reads the file from a given file name.
+        Parameters:
+            name (str): The name of the file.
+        Returns:
+            str: The content of the file.
+        """
+        with open(
+            self.path_by_name(name), mode="r", encoding="utf-8"
+        ) as file:
             return file.read()

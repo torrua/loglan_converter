@@ -1,9 +1,11 @@
 # pylint: disable=missing-module-docstring, missing-class-docstring, missing-function-docstring
 
 import os
-from loglan_core.addons.word_selector import WordSelector
-from app.models.postgres.connector import PostgresDatabaseConnector
+
 from loglan_core.addons.exporter import Exporter
+from loglan_core.addons.word_selector import WordSelector
+
+from app.models.postgres.connector import PostgresDatabaseConnector
 
 if __name__ == "__main__":
     LOD_URI = os.environ.get("LOD_DATABASE_URL")
