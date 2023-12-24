@@ -1,6 +1,8 @@
-import os
-from app.models.text.connector import TextConnector
+# pylint: disable=missing-module-docstring, missing-class-docstring, missing-function-docstring
 
+import os
+
+from app.models.text.connector import TextConnector
 
 if __name__ == "__main__":
     dir_path = os.getenv("TXT_DATABASE_URL")

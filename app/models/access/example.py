@@ -1,7 +1,6 @@
 # pylint: disable=missing-module-docstring, missing-class-docstring, missing-function-docstring
 
 import os
-from pprint import pprint
 
 from sqlalchemy import select
 
@@ -13,7 +12,9 @@ if __name__ == "__main__":
     acd = AccessDatabaseConnector(MDB_URI)
     session = acd.session()
 
-    word_spells = session.execute(select(WordSpell).where(WordSpell.word_id == 7180)).scalars().all()
+    word_spells = session.execute(
+        select(WordSpell).where(WordSpell.word_id == 7180)
+    ).scalars().all()
     words = session.execute(select(Word).where(Word.word_id == 7180)).scalars().all()
     for w in words:
         print(w.export_data())
