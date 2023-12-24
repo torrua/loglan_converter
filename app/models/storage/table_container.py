@@ -193,24 +193,26 @@ class TableContainer(list):
             bool: True if each element in the list matches the expected
                 data type(s) from the pattern; False otherwise.
         """
-        processed_pattern = []
-        for expected_types in self.pattern:
-            if not isinstance(expected_types, tuple):
-                expected_types = (expected_types,)
-            expected_types = tuple(
-                type(None) if t is None else t for t in expected_types
-            )
-            processed_pattern.append(expected_types)
 
-        for expected_types, value in zip(processed_pattern, item):
-            if not isinstance(value, expected_types):
+        for types, value in zip(self.pattern, item):
+            prepared_types = self.prepared_types(types)
+            if not isinstance(value, prepared_types):
                 log.debug(
                     f"{False} for item {item} in '{value}' "
-                    f"with type '{type(value).__name__}': {expected_types}"
+                    f"with type '{type(value).__name__}': {prepared_types}"
                 )
                 return False
         log.debug("Is proper types for all elements: True")
         return True
+
+    @staticmethod
+    def prepared_types(expected_types):
+        if not isinstance(expected_types, tuple):
+            expected_types = (expected_types,)
+        expected_types = tuple(
+            type(None) if t is None else t for t in expected_types
+        )
+        return expected_types
 
     @classmethod
     def generate_containers(
