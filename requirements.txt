@@ -1,4 +1,4 @@
-loglan-core==0.1.7
+loglan-core==0.1.8
 sqlalchemy==2.0.23
 sqlalchemy-access==2.0.2
 psycopg2==2.9.9
