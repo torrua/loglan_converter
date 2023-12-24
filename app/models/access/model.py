@@ -78,7 +78,7 @@ class AccessDefinition(BaseModel):
     __tablename__ = "WordDefinition"
     sort_name = "Definition"
 
-    word_id = Column("WID", Integer)
+    word_id = Column("WID", Integer, nullable=False)
     position = Column("I", Integer, nullable=False)
     usage = Column("Usage", String(64))
     grammar = Column("Grammar", String(8))
