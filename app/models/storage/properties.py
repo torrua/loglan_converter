@@ -55,7 +55,7 @@ DEFAULT_TABLE_PROPERTIES_COLLECTION = (
             str | None,  # match
             str | None,  # source
             int | None,  # year
-            str | None,  # rank
+            str | int | None,  # rank
             str | None,  # origin
             str | None,  # origin_x
             str | None,  # usedin
