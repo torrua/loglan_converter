@@ -4,7 +4,7 @@ from app.models.storage.storage import Storage
 
 
 class TextInterface(DatabaseInterface):
-    def __init__(self, engine):
+    def __init__(self, connector):
         pass
 
     def export_data(self) -> Storage:
