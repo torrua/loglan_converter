@@ -8,7 +8,7 @@ from app.models.storage.properties import (
 from app.models.storage.table_container import TableContainer
 
 
-class Storage:
+class Storage:   # pylint: disable=too-many-instance-attributes
     def __init__(
         self,
         table_properties_collection: Iterable[
