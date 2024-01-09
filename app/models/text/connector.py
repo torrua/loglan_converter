@@ -84,7 +84,7 @@ class TextConnector:
                 return file_path
         raise FileNotFoundError(f"File '{name}' not found.")
 
-    def file_by_name(self, name: str) -> str:
+    def content_by_name(self, name: str) -> str:
         """Reads the file from a given file name.
         Parameters:
             name (str): The name of the file.
