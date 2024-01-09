@@ -75,7 +75,12 @@ class AccessAuthor(BaseModel):
     notes = Column(String(128))
 
     def export_data(self):
-        return f"{self.abbreviation}@{self.full_name}@{self.ves(self.notes)}"
+        data = [
+            self.abbreviation,
+            self.full_name,
+            self.ves(self.notes),
+        ]
+        return "@".join(data)
 
     @classmethod
     def import_data(cls, item: list[str]):
@@ -100,14 +105,16 @@ class AccessDefinition(BaseModel):
     id = Column("id", Integer, primary_key=True)
 
     def export_data(self):
-        return (
-            f"{self.word_id}@"
-            f"{self.position}@"
-            f"{self.ves(self.usage)}@"
-            f"{self.ves(self.grammar)}@"
-            f"{self.body}@@"
-            f"{self.ves(self.case_tags)}"
-        )
+        data = [
+            str(self.word_id),
+            str(self.position),
+            self.ves(self.usage),
+            self.ves(self.grammar),
+            self.body,
+            self.ves(self.main),
+            self.ves(self.case_tags),
+        ]
+        return "@".join(data)
 
     @classmethod
     def import_data(cls, item: list[str]):
@@ -138,14 +145,15 @@ class AccessEvent(BaseModel):
     suffix = Column("FilenameSuffix", String(16))
 
     def export_data(self):
-        return (
-            f"{self.id}@"
-            f"{self.name}@"
-            f"{self.date}@"
-            f"{self.definition}@"
-            f"{self.ves(self.annotation)}@"
-            f"{self.ves(self.suffix)}"
-        )
+        data = [
+            str(self.id),
+            self.name,
+            self.date,
+            self.definition,
+            self.ves(self.annotation),
+            self.ves(self.suffix),
+        ]
+        return "@".join(data)
 
     @classmethod
     def import_data(cls, item: list[str]):
@@ -173,12 +181,13 @@ class AccessSetting(BaseModel):
     db_release = Column("DBRelease", String(16), nullable=False)
 
     def export_data(self):
-        return (
-            f"{self.date.strftime('%d.%m.%Y %H:%M:%S')}@"
-            f"{self.db_version}@"
-            f"{self.last_word_id}@"
-            f"{self.db_release}"
-        )
+        data = [
+            self.date.strftime("%d.%m.%Y %H:%M:%S"),
+            str(self.db_version),
+            str(self.last_word_id),
+            self.db_release,
+        ]
+        return "@".join(data)
 
     @staticmethod
     def import_data(item: list[str]):
@@ -204,7 +213,12 @@ class AccessSyllable(BaseModel):
     allowed = Column(Boolean)
 
     def export_data(self):
-        return f"{self.name}@{self.type}@{self.allowed}"
+        data = [
+            self.name,
+            self.type,
+            str(self.allowed),
+        ]
+        return "@".join(data)
 
     @staticmethod
     def import_data(item: list[str]):
@@ -231,13 +245,14 @@ class AccessType(BaseModel):
     description = Column(String(255), nullable=True)
 
     def export_data(self):
-        return (
-            f"{self.type}@"
-            f"{self.type_x}@"
-            f"{self.group}@"
-            f"{self.parentable}@"
-            f"{self.ves(self.description)}"
-        )
+        data = [
+            self.type,
+            self.type_x,
+            self.group,
+            str(self.parentable),
+            self.ves(self.description),
+        ]
+        return "@".join(data)
 
     @classmethod
     def import_data(cls, item: list[str]):
@@ -246,7 +261,7 @@ class AccessType(BaseModel):
             "type_x": item[1],
             "group": cls.von(item[2]),
             "parentable": ast.literal_eval(item[3]),
-            "description": cls.von(item[4]),  # TODO: check - or von?
+            "description": cls.von(item[4]),
         }
 
 
@@ -276,21 +291,21 @@ class AccessWord(BaseModel):
         Prepare Word data for exporting to text file
         :return: Formatted basic string
         """
-
-        return (
-            f"{self.word_id}@"
-            f"{self.type}@"
-            f"{self.type_x}@"
-            f"{self.ves(self.affixes)}@"
-            f"{self.ves(self.match)}@"
-            f"{self.authors}@"
-            f"{self.year}@"
-            f"{self.ves(self.rank)}@"
-            f"{self.ves(self.origin)}@"
-            f"{self.ves(self.origin_x)}@"
-            f"{self.ves(self.used_in)}@"
-            f"{self.ves(self.TID_old)}"
-        )
+        data = [
+            str(self.word_id),
+            self.type,
+            self.type_x,
+            self.ves(self.affixes),
+            self.ves(self.match),
+            self.authors,
+            self.year,
+            self.ves(self.rank),
+            self.ves(self.origin),
+            self.ves(self.origin_x),
+            self.ves(self.used_in),
+            str(self.ves(self.TID_old)),
+        ]
+        return "@".join(data)
 
     @classmethod
     def import_data(cls, item: list[str]):
@@ -331,15 +346,16 @@ class AccessWordSpell(BaseModel):
         :return: Formatted basic string
         """
         code_name = "".join(["0" if symbol.isupper() else "5" for symbol in self.word])
-        return (
-            f"{self.word_id}@"
-            f"{self.word}@"
-            f"{self.word.lower()}@"
-            f"{code_name}@"
-            f"{self.event_start_id}@"
-            f"{self.event_end_id}@"
-            f"{self.ves(self.origin_x)}"
-        )
+        data = [
+            str(self.word_id),
+            self.word,
+            self.word.lower(),
+            code_name,
+            str(self.event_start_id),
+            str(self.event_end_id),
+            self.ves(self.origin_x),
+        ]
+        return "@".join(data)
 
     @classmethod
     def import_data(cls, item: list[str]):
