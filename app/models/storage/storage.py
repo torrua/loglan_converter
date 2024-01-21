@@ -20,19 +20,10 @@ class Storage:   # pylint: disable=too-many-instance-attributes
             table_properties_collection: A list of TableProperties objects.
         """
 
-        containers = TableContainer.generate_containers(table_properties_collection)
+        self.containers: tuple[TableContainer, ...] = TableContainer.generate_containers(table_properties_collection)
 
-        if len(containers) != 8:
+        if len(self.containers) != 8:
             raise ValueError("Insufficient table contents generated.")
-
-        self.author = containers[0]
-        self.event = containers[1]
-        self.word_type = containers[2]
-        self.word = containers[3]
-        self.word_spell = containers[4]
-        self.definition = containers[5]
-        self.settings = containers[6]
-        self.syllable = containers[7]
 
     def __repr__(self):
         new_line = "\n\t"
@@ -48,13 +39,6 @@ class Storage:   # pylint: disable=too-many-instance-attributes
     @property
     def names(self) -> list[str]:
         return [v.name for v in self.containers]
-
-    @property
-    def containers(self) -> list[TableContainer]:
-        return sorted(
-            [v for v in self.__dict__.values() if isinstance(v, TableContainer)],
-            key=lambda v: v.order,
-        )
 
     def container_by_name(self, name) -> TableContainer:
         for container in self.containers:
