@@ -110,7 +110,9 @@ def check_unintelligible_ccc(session: Session):
     :return:
     """
     log.info("Start checking unintelligible CCC")
-    unintelligible_ccc_statement = select(Syllable.name).where(Syllable.type == "UnintelligibleCCC")
+    unintelligible_ccc_statement = select(Syllable.name).where(
+        Syllable.type == "UnintelligibleCCC"
+    )
     unintelligible_ccc = session.execute(unintelligible_ccc_statement).scalars().all()
 
     ccc_filter = Word.name.like(any_([f"%{ccc}%" for ccc in unintelligible_ccc]))

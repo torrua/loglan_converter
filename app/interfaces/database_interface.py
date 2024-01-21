@@ -8,6 +8,7 @@ class DatabaseInterface(ABC):
     """
     An abstract class representing a database interface.
     """
+
     SEPARATOR = "@"
 
     @abstractmethod

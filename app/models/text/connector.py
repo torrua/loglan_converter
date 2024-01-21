@@ -91,7 +91,5 @@ class TextConnector:
         Returns:
             str: The content of the file.
         """
-        with open(
-            self.path_by_name(name), mode="r", encoding="utf-8"
-        ) as file:
+        with open(self.path_by_name(name), mode="r", encoding="utf-8") as file:
             return file.read()

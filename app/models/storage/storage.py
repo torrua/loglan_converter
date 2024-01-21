@@ -10,7 +10,7 @@ from app.models.storage.properties import (
 from app.models.storage.table_container import TableContainer
 
 
-class Storage:   # pylint: disable=too-many-instance-attributes
+class Storage:  # pylint: disable=too-many-instance-attributes
     def __init__(
         self,
         table_properties_collection: Iterable[
@@ -22,9 +22,9 @@ class Storage:   # pylint: disable=too-many-instance-attributes
             table_properties_collection: A list of TableProperties objects.
         """
 
-        self.containers: tuple[TableContainer, ...] = (
-            TableContainer.generate_containers(table_properties_collection)
-        )
+        self.containers: tuple[
+            TableContainer, ...
+        ] = TableContainer.generate_containers(table_properties_collection)
 
         if len(self.containers) != 8:
             raise ValueError("Insufficient table contents generated.")

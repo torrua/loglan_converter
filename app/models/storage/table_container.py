@@ -93,7 +93,9 @@ class TableContainer(list):
         """
         item_to_append = self.convert_item_elements(item)
         if not self._is_item_suitable(item_to_append):
-            raise ValueError(f"Item of class '{self.name}' is not suitable for this collection.")
+            raise ValueError(
+                f"Item of class '{self.name}' is not suitable for this collection."
+            )
         super().append(item_to_append)
 
     def append_directly(self, item: Iterable[Any]):

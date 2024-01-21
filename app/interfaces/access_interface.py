@@ -4,7 +4,6 @@ from app.models.storage.storage import Storage
 
 
 class AccessInterface(DatabaseInterface):
-
     def __init__(self, connector):
         pass
 

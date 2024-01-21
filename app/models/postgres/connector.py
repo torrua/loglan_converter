@@ -27,9 +27,7 @@ class Event(BaseEvent):
         date_index = 2
         args = list(args)
         if args and isinstance(args[date_index], str):
-            args[date_index] = datetime.strptime(
-                args[date_index], self.DATE_FORMAT
-            )
+            args[date_index] = datetime.strptime(args[date_index], self.DATE_FORMAT)
         super().__init__(*args, **kwargs)
 
 
@@ -40,9 +38,7 @@ class Setting(BaseSetting):
         date_index = 0
         args = list(args)
         if args and isinstance(args[date_index], str):
-            args[date_index] = datetime.strptime(
-                args[date_index], self.DATE_FORMAT
-            )
+            args[date_index] = datetime.strptime(args[date_index], self.DATE_FORMAT)
         super().__init__(*args, **kwargs)
 
 
