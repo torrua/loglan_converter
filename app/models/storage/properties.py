@@ -5,16 +5,25 @@ from __future__ import annotations
 from typing import NamedTuple, Any
 
 
+class ClassName:
+    authors = "Author"
+    events = "LexEvent"
+    types = "Type"
+    words = "Words"
+    word_spells = "WordSpell"
+    definitions = "WordDefinition"
+    settings = "Settings"
+    syllables = "Syllable"
+
+
 class TableProperties(NamedTuple):
-    order: int
     name: str
     pattern: list[Any]
 
 
 DEFAULT_TABLE_PROPERTIES_COLLECTION = (
     TableProperties(
-        1,
-        "Author",
+        ClassName.authors,
         [
             str,  # abbreviation
             str | None,  # full_name
@@ -22,10 +31,9 @@ DEFAULT_TABLE_PROPERTIES_COLLECTION = (
         ],
     ),
     TableProperties(
-        2,
-        "LexEvent",
+        ClassName.events,
         [
-            int,  # id
+            int,  # event_id
             str,  # name
             str,  # date
             str,  # definition
@@ -34,8 +42,7 @@ DEFAULT_TABLE_PROPERTIES_COLLECTION = (
         ],
     ),
     TableProperties(
-        3,
-        "Type",
+        ClassName.types,
         [
             str,  # type
             str,  # type_x
@@ -45,8 +52,7 @@ DEFAULT_TABLE_PROPERTIES_COLLECTION = (
         ],
     ),
     TableProperties(
-        4,
-        "Words",
+        ClassName.words,
         [
             int,  # old_id
             str,  # type.type
@@ -63,8 +69,7 @@ DEFAULT_TABLE_PROPERTIES_COLLECTION = (
         ],
     ),
     TableProperties(
-        5,
-        "WordSpell",
+        ClassName.word_spells,
         [
             int,  # old_id
             str,  # name
@@ -76,8 +81,7 @@ DEFAULT_TABLE_PROPERTIES_COLLECTION = (
         ],
     ),
     TableProperties(
-        6,
-        "WordDefinition",
+        ClassName.definitions,
         [
             int,  # source_word.old_id
             int,  # position
@@ -89,18 +93,16 @@ DEFAULT_TABLE_PROPERTIES_COLLECTION = (
         ],
     ),
     TableProperties(
-        7,
-        "Settings",
+        ClassName.settings,
         [
-            str,  # date TODO: add as date
+            str,  # date
             int,  # db_version
             int,  # last_word_id
             str,  # db_release
         ],
     ),
     TableProperties(
-        8,
-        "Syllable",
+        ClassName.syllables,
         [
             str,  # name
             str,  # type
