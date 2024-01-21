@@ -1,4 +1,4 @@
-# pylint: disable=missing-module-docstring, missing-class-docstring
+# pylint: disable=missing-module-docstring, missing-class-docstring, missing-function-docstring
 
 from loglan_core import Author, Type, Word, Key, Definition, WordSelector
 from loglan_core.addons.definition_selector import DefinitionSelector

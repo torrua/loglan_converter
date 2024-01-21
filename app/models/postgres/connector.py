@@ -1,6 +1,7 @@
 # pylint: disable=missing-module-docstring, missing-class-docstring, missing-function-docstring
 
 import re
+from datetime import datetime
 
 from loglan_core import (
     Author,
@@ -13,10 +14,10 @@ from loglan_core import (
     Syllable,
 )
 from loglan_core.base import BaseModel
-from app.models.storage.properties import ClassName
 from sqlalchemy import create_engine, Engine
 from sqlalchemy.orm import sessionmaker, Session
-from datetime import datetime
+
+from app.models.storage.properties import ClassName
 
 
 class Event(BaseEvent):

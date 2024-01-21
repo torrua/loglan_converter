@@ -5,7 +5,7 @@ from __future__ import annotations
 from typing import NamedTuple, Any
 
 
-class ClassName:
+class ClassName:  # pylint: disable=too-few-public-methods
     authors = "Author"
     events = "LexEvent"
     types = "Type"

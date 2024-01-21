@@ -1,6 +1,8 @@
 # pylint: disable=missing-module-docstring, missing-class-docstring, missing-function-docstring
 from __future__ import annotations
+
 from typing import Iterable
+
 from app.models.storage.properties import (
     TableProperties,
     DEFAULT_TABLE_PROPERTIES_COLLECTION,
@@ -20,7 +22,9 @@ class Storage:   # pylint: disable=too-many-instance-attributes
             table_properties_collection: A list of TableProperties objects.
         """
 
-        self.containers: tuple[TableContainer, ...] = TableContainer.generate_containers(table_properties_collection)
+        self.containers: tuple[TableContainer, ...] = (
+            TableContainer.generate_containers(table_properties_collection)
+        )
 
         if len(self.containers) != 8:
             raise ValueError("Insufficient table contents generated.")

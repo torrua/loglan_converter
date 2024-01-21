@@ -1,5 +1,6 @@
 # pylint: disable=missing-module-docstring
 from abc import ABC, abstractmethod
+
 from app.models.storage.storage import Storage
 
 
