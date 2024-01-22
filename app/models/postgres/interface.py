@@ -6,7 +6,7 @@ from loglan_core.addons.exporter import Exporter
 from loglan_core.addons.word_linker import WordLinker
 from sqlalchemy import func, select
 
-from app.interfaces.database_interface import DatabaseInterface
+from app.database_interface import DatabaseInterface
 from app.models.postgres.connector import PostgresDatabaseConnector
 from app.models.postgres.functions import (
     extract_keys,
@@ -19,8 +19,8 @@ from app.models.postgres.functions import (
     generate_djifoa_children,
     generate_authors_data,
 )
-from app.models.storage.properties import ClassName
-from app.models.storage.storage import Storage
+from app.properties import ClassName
+from app.storage import Storage
 from logger import log, logging_time
 
 

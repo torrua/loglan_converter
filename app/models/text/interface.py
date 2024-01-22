@@ -1,6 +1,6 @@
 # pylint: disable=missing-module-docstring, missing-class-docstring, missing-function-docstring
-from app.interfaces.database_interface import DatabaseInterface
-from app.models.storage.storage import Storage
+from app.database_interface import DatabaseInterface
+from app.storage import Storage
 
 
 class TextInterface(DatabaseInterface):

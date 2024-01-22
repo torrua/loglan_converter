@@ -2,7 +2,7 @@
 
 import os
 
-from app.models.storage.storage import Storage
+from app.storage import Storage
 
 
 class TextConnector:

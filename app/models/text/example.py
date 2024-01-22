@@ -2,7 +2,7 @@
 
 import os
 
-from app.models.storage.properties import ClassName
+from app.properties import ClassName
 from app.models.text.connector import TextConnector
 
 if __name__ == "__main__":

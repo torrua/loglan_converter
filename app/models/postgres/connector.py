@@ -17,7 +17,7 @@ from loglan_core.base import BaseModel
 from sqlalchemy import create_engine, Engine
 from sqlalchemy.orm import sessionmaker, Session
 
-from app.models.storage.properties import ClassName
+from app.properties import ClassName
 
 
 class Event(BaseEvent):

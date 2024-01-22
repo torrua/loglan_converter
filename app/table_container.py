@@ -3,7 +3,7 @@ from __future__ import annotations
 
 from typing import Any, Iterable, Sized, Type, get_args
 
-from app.models.storage.properties import TableProperties
+from app.properties import TableProperties
 from logger import log
 
 

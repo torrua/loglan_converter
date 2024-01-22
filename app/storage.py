@@ -3,11 +3,11 @@ from __future__ import annotations
 
 from typing import Iterable
 
-from app.models.storage.properties import (
+from app.properties import (
     TableProperties,
     DEFAULT_TABLE_PROPERTIES_COLLECTION,
 )
-from app.models.storage.table_container import TableContainer
+from app.table_container import TableContainer
 
 
 class Storage:  # pylint: disable=too-many-instance-attributes

@@ -4,8 +4,8 @@ from datetime import datetime
 
 from loglan_core import Key, Word, WordSelector
 
-from app.models.storage.properties import ClassName
-from app.models.storage.storage import Storage
+from app.properties import ClassName
+from app.storage import Storage
 
 
 def extract_keys(bodies: str, language: str) -> list[Key]:
