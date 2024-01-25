@@ -5,9 +5,21 @@ from urllib.parse import quote_plus
 
 from sqlalchemy import Engine, create_engine
 from sqlalchemy.orm import Session, sessionmaker
+from app.database_interface import DatabaseConnector
+from app.properties import ClassName
+from app.models.access.model import (
+    AccessAuthor,
+    AccessEvent,
+    AccessSetting,
+    AccessSyllable,
+    AccessType,
+    AccessWord,
+    AccessWordSpell,
+    AccessDefinition,
+)
 
 
-class AccessDatabaseConnector:
+class AccessDatabaseConnector(DatabaseConnector):
     DRIVER = (
         r"DRIVER={{Microsoft Access Driver (*.mdb, *.accdb)}};DBQ={};ExtendedAnsiSQL=1;"
     )
@@ -24,6 +36,19 @@ class AccessDatabaseConnector:
             f"access+pyodbc:///?odbc_connect={quote_plus(connection_string)}"
         )
         return create_engine(connection_url)
+
+    @property
+    def table_order(self):
+        return {
+            ClassName.authors: AccessAuthor,
+            ClassName.events: AccessEvent,
+            ClassName.types: AccessType,
+            ClassName.words: AccessWord,
+            ClassName.word_spells: AccessWordSpell,
+            ClassName.definitions: AccessDefinition,
+            ClassName.settings: AccessSetting,
+            ClassName.syllables: AccessSyllable,
+        }
 
     def session(self) -> Session:
         return sessionmaker(bind=self.engine)()

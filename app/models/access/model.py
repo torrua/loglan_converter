@@ -75,12 +75,11 @@ class AccessAuthor(BaseModel):
     notes = Column(String(128))
 
     def export_data(self):
-        data = [
+        return [
             self.abbreviation,
             self.full_name,
             self.ves(self.notes),
         ]
-        return "@".join(data)
 
     @classmethod
     def import_data(cls, item: list[str]):
@@ -105,16 +104,15 @@ class AccessDefinition(BaseModel):
     id = Column("id", Integer, primary_key=True)
 
     def export_data(self):
-        data = [
-            str(self.word_id),
-            str(self.position),
+        return [
+            self.word_id,
+            self.position,
             self.ves(self.usage),
             self.ves(self.grammar),
             self.body,
             self.ves(self.main),
             self.ves(self.case_tags),
         ]
-        return "@".join(data)
 
     @classmethod
     def import_data(cls, item: list[str]):
@@ -145,15 +143,14 @@ class AccessEvent(BaseModel):
     suffix = Column("FilenameSuffix", String(16))
 
     def export_data(self):
-        data = [
-            str(self.id),
+        return [
+            self.id,
             self.name,
             self.date,
             self.definition,
             self.ves(self.annotation),
             self.ves(self.suffix),
         ]
-        return "@".join(data)
 
     @classmethod
     def import_data(cls, item: list[str]):
@@ -181,13 +178,12 @@ class AccessSetting(BaseModel):
     db_release = Column("DBRelease", String(16), nullable=False)
 
     def export_data(self):
-        data = [
+        return [
             self.date.strftime("%d.%m.%Y %H:%M:%S"),
-            str(self.db_version),
-            str(self.last_word_id),
+            self.db_version,
+            self.last_word_id,
             self.db_release,
         ]
-        return "@".join(data)
 
     @staticmethod
     def import_data(item: list[str]):
@@ -213,12 +209,11 @@ class AccessSyllable(BaseModel):
     allowed = Column(Boolean)
 
     def export_data(self):
-        data = [
+        return [
             self.name,
             self.type,
-            str(self.allowed),
+            self.allowed,
         ]
-        return "@".join(data)
 
     @staticmethod
     def import_data(item: list[str]):
@@ -245,14 +240,13 @@ class AccessType(BaseModel):
     description = Column(String(255), nullable=True)
 
     def export_data(self):
-        data = [
+        return [
             self.type,
             self.type_x,
             self.group,
-            str(self.parentable),
+            self.parentable,
             self.ves(self.description),
         ]
-        return "@".join(data)
 
     @classmethod
     def import_data(cls, item: list[str]):
@@ -291,8 +285,8 @@ class AccessWord(BaseModel):
         Prepare Word data for exporting to text file
         :return: Formatted basic string
         """
-        data = [
-            str(self.word_id),
+        return [
+            self.word_id,
             self.type,
             self.type_x,
             self.ves(self.affixes),
@@ -303,9 +297,8 @@ class AccessWord(BaseModel):
             self.ves(self.origin),
             self.ves(self.origin_x),
             self.ves(self.used_in),
-            str(self.ves(self.TID_old)),
+            self.TID_old,
         ]
-        return "@".join(data)
 
     @classmethod
     def import_data(cls, item: list[str]):
@@ -346,16 +339,15 @@ class AccessWordSpell(BaseModel):
         :return: Formatted basic string
         """
         code_name = "".join(["0" if symbol.isupper() else "5" for symbol in self.word])
-        data = [
-            str(self.word_id),
+        return [
+            self.word_id,
             self.word,
             self.word.lower(),
             code_name,
-            str(self.event_start_id),
-            str(self.event_end_id),
+            self.event_start_id,
+            self.event_end_id,
             self.ves(self.origin_x),
         ]
-        return "@".join(data)
 
     @classmethod
     def import_data(cls, item: list[str]):
