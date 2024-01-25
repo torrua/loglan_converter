@@ -18,6 +18,7 @@ from sqlalchemy import create_engine, Engine
 from sqlalchemy.orm import sessionmaker, Session
 
 from app.properties import ClassName
+from app.database_interface import DatabaseConnector
 
 
 class Event(BaseEvent):
@@ -42,17 +43,7 @@ class Setting(BaseSetting):
         super().__init__(*args, **kwargs)
 
 
-class PostgresDatabaseConnector:
-    TABLES_ORDER = {
-        ClassName.authors: Author,
-        ClassName.events: Event,
-        ClassName.types: Type,
-        ClassName.words: BaseWord,
-        ClassName.word_spells: WordSpell,
-        ClassName.definitions: Definition,
-        ClassName.settings: Setting,
-        ClassName.syllables: Syllable,
-    }
+class PostgresDatabaseConnector(DatabaseConnector):
 
     def __init__(self, path: str):
         if self.is_path(path):
@@ -62,6 +53,19 @@ class PostgresDatabaseConnector:
     @classmethod
     def get_engine(cls, path: str) -> Engine:
         return create_engine(path)
+
+    @property
+    def table_order(self):
+        return {
+            ClassName.authors: Author,
+            ClassName.events: Event,
+            ClassName.types: Type,
+            ClassName.words: BaseWord,
+            ClassName.word_spells: WordSpell,
+            ClassName.definitions: Definition,
+            ClassName.settings: Setting,
+            ClassName.syllables: Syllable,
+        }
 
     def session(self) -> Session:
         return sessionmaker(bind=self.engine, future=True)()

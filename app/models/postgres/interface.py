@@ -21,7 +21,10 @@ from app.models.postgres.functions import (
 )
 from app.properties import ClassName
 from app.storage import Storage
-from logger import log, logging_time
+from logger import logging, logging_time
+
+log = logging.getLogger(__name__)
+log.level = logging.ERROR
 
 
 class PostgresInterface(DatabaseInterface):
@@ -36,7 +39,7 @@ class PostgresInterface(DatabaseInterface):
         s = Storage()
         with self.connector.session() as session:
             for container, class_ in zip(
-                s.containers, self.connector.TABLES_ORDER.values()
+                s.containers, self.connector.table_order.values()
             ):
                 objects = session.query(class_).all()
                 log.info("Exporting %s", class_.__name__)
@@ -70,7 +73,7 @@ class PostgresInterface(DatabaseInterface):
             ClassName.syllables,
         ]:
             with self.connector.session() as session:
-                class_ = self.connector.TABLES_ORDER.get(class_name)
+                class_ = self.connector.table_order.get(class_name)
                 log.info("Importing %s", class_.__name__)
                 container = data.container_by_name(class_name)
                 objects = [class_(*item) for item in container]
@@ -79,7 +82,7 @@ class PostgresInterface(DatabaseInterface):
                 log.info("Imported %s %s items\n", len(container), class_.__name__)
 
     def import_words(self, data):
-        class_ = self.connector.TABLES_ORDER.get(ClassName.words)
+        class_ = self.connector.table_order.get(ClassName.words)
         log.info("Importing %s", class_.__name__)
 
         words = data.container_by_name(ClassName.words)
