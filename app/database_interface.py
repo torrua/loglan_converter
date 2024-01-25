@@ -28,3 +28,11 @@ class DatabaseInterface(ABC):
         Parameters:
             data (Storage): The Storage object to import.
         """
+
+
+class DatabaseConnector(ABC):
+
+    @property
+    @abstractmethod
+    def table_order(self) -> dict:
+        pass
