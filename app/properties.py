@@ -106,7 +106,7 @@ DEFAULT_TABLE_PROPERTIES_COLLECTION = (
         [
             str,  # name
             str,  # type
-            bool | None,  # allowed
+            bool,  # allowed
         ],
     ),
 )
