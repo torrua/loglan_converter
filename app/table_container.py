@@ -281,10 +281,13 @@ def convert_element(value, types) -> Any:
 
     if not value and type(None) in types:
         return None
-    if value.isdigit() and int in types:
-        return int(value)
-    if (value.lower() in ["true", "1"]) and (bool in types):
-        return True
-    if (value.lower() in ["false", "0"]) and (bool in types):
-        return False
+    if int in types and str(value).isdigit():
+        return int(str(value))
+    if bool in types:
+        if isinstance(value, bool):
+            return value
+        if str(value).lower() == "true":
+            return True
+        if str(value).lower() == "false":
+            return False
     return value
