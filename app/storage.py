@@ -34,8 +34,7 @@ class Storage:  # pylint: disable=too-many-instance-attributes
         elements = new_line.join(
             [
                 repr(v) + ","
-                for v in self.__dict__.values()
-                if isinstance(v, TableContainer)
+                for v in self.containers
             ]
         )
         return f"{self.__class__.__name__}({new_line}{elements}\n)"
