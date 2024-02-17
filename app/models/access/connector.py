@@ -5,7 +5,7 @@ from urllib.parse import quote_plus
 
 from sqlalchemy import Engine, create_engine
 from sqlalchemy.orm import Session, sessionmaker
-from app.database_interface import DatabaseConnector
+from app.connector import DatabaseConnector
 from app.properties import ClassName
 from app.models.access.model import (
     AccessAuthor,
@@ -50,6 +50,7 @@ class AccessDatabaseConnector(DatabaseConnector):
             ClassName.syllables: AccessSyllable,
         }
 
+    @property
     def session(self) -> Session:
         return sessionmaker(bind=self.engine)()
 

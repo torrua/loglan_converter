@@ -1,6 +1,5 @@
 # pylint: disable=missing-module-docstring, missing-class-docstring, missing-function-docstring
 
-import ast
 from datetime import datetime
 
 from sqlalchemy import Column, String, Integer, Text, Boolean, DateTime
@@ -38,7 +37,7 @@ class BaseModel(DeclarativeBase):
 
     def __init__(self, *initial_data, **kwargs):
         """Constructor"""
-        super().__init__(**kwargs)
+        super().__init__()
         for dictionary in initial_data:
             for key in dictionary:
                 setattr(self, key, dictionary[key])
@@ -220,7 +219,7 @@ class AccessSyllable(BaseModel):
         return {
             "name": item[0],
             "type": item[1],
-            "allowed": ast.literal_eval(item[2]) if item[2] else False,
+            "allowed": item[2] or False,
         }
 
 
@@ -254,7 +253,7 @@ class AccessType(BaseModel):
             "type": item[0],
             "type_x": item[1],
             "group": cls.von(item[2]),
-            "parentable": ast.literal_eval(item[3]),
+            "parentable": item[3],
             "description": cls.von(item[4]),
         }
 
@@ -314,7 +313,7 @@ class AccessWord(BaseModel):
             "origin": cls.von(item[8]),
             "origin_x": cls.von(item[9]),
             "used_in": cls.von(item[10]),
-            "TID_old": cls.von(int(item[11])),
+            "TID_old": cls.von(item[11]),
         }
 
 

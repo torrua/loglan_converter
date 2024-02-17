@@ -10,13 +10,15 @@ from app.models.access.model import AccessWordSpell as WordSpell, AccessWord as 
 if __name__ == "__main__":
     MDB_URI = os.environ.get("MDB_DATABASE_URL")
     acd = AccessDatabaseConnector(MDB_URI)
-    session = acd.session()
+    session = acd.session
 
     word_spells = (
         session.execute(select(WordSpell).where(WordSpell.word_id == 7180))
         .scalars()
         .all()
     )
+    print(word_spells)
+
     words = session.execute(select(Word).where(Word.word_id == 7180)).scalars().all()
     for w in words:
         print(w.export_data())
