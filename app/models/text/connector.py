@@ -2,11 +2,19 @@
 
 import os
 
+from sqlalchemy.orm import Session
+
 from app.storage import Storage
+from app.connector import DatabaseConnector
 
 
-class TextConnector:
+class TextConnector(DatabaseConnector):
     EXTENSION = "txt"
+    engine = None
+
+    @property
+    def session(self) -> Session:
+        return None
 
     def __init__(self, path: str):
         self.is_path(path)
@@ -15,6 +23,10 @@ class TextConnector:
 
     def __repr__(self):
         return f'{self.__class__.__name__}(path="{self.path}")'
+
+    @property
+    def table_order(self) -> dict:
+        return {}
 
     @staticmethod
     def is_path(path: str) -> bool:
