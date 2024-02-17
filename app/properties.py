@@ -15,6 +15,13 @@ class ClassName:  # pylint: disable=too-few-public-methods
     settings = "Settings"
     syllables = "Syllable"
 
+    def __iter__(self):
+        return iter((
+            self.authors, self.events, self.types,
+            self.words, self.word_spells, self.definitions,
+            self.settings, self.syllables
+        ))
+
 
 class TableProperties(NamedTuple):
     name: str
