@@ -6,7 +6,7 @@ from loglan_core.addons.exporter import Exporter
 from loglan_core.addons.word_linker import WordLinker
 from sqlalchemy import func, select
 
-from app.database_interface import DatabaseInterface
+from app.interface import DatabaseInterface
 from app.models.postgres.connector import PostgresDatabaseConnector
 from app.models.postgres.functions import (
     extract_keys,
@@ -36,22 +36,10 @@ class PostgresInterface(DatabaseInterface):
 
     @logging_time
     def export_data(self) -> Storage:
-        s = Storage()
-        with self.connector.session() as session:
-            for container, class_ in zip(
-                s.containers, self.connector.table_order.values()
-            ):
-                objects = session.query(class_).all()
-                log.info("Exporting %s", class_.__name__)
+        return self.default_export(self.connector, self.get_data_from_objects)
 
-                for obj in objects:
-                    exp = Exporter.export(obj, self.SEPARATOR)
-                    exported_object = exp.split(self.SEPARATOR)
-                    container.append(exported_object)
-
-                log.info("Exported %s %s items\n", len(container), class_.__name__)
-        # TODO Implement direct exporting
-        return s
+    def get_data_from_objects(self, objects):
+        return [Exporter.export(obj, self.SEPARATOR).split(self.SEPARATOR) for obj in objects]
 
     @logging_time
     def import_data(self, data: Storage) -> None:
@@ -72,7 +60,7 @@ class PostgresInterface(DatabaseInterface):
             ClassName.settings,
             ClassName.syllables,
         ]:
-            with self.connector.session() as session:
+            with self.connector.session as session:
                 class_ = self.connector.table_order.get(class_name)
                 log.info("Importing %s", class_.__name__)
                 container = data.container_by_name(class_name)
@@ -88,7 +76,7 @@ class PostgresInterface(DatabaseInterface):
         words = data.container_by_name(ClassName.words)
         spell = data.container_by_name(ClassName.word_spells)
 
-        with self.connector.session() as session:
+        with self.connector.session as session:
             types_data = session.query(Type.type, Type.id).all()
             types = dict((item.type, item.id) for item in types_data)
 
@@ -117,7 +105,7 @@ class PostgresInterface(DatabaseInterface):
 
         words.sort(key=lambda x: x.name)
 
-        with self.connector.session() as session:
+        with self.connector.session as session:
             session.bulk_save_objects(words)
             session.commit()
 
@@ -127,7 +115,7 @@ class PostgresInterface(DatabaseInterface):
         definitions = data.container_by_name(ClassName.definitions)
 
         all_definitions = []
-        with self.connector.session() as session:
+        with self.connector.session as session:
             for item in definitions:
                 words = (
                     session.execute(WordSelector().filter(Word.id_old == int(item[0])))
@@ -158,7 +146,7 @@ class PostgresInterface(DatabaseInterface):
             "Importing %s", Key.__name__
         )  # TODO Rewrite for getting language from definitions
 
-        with self.connector.session() as session:
+        with self.connector.session as session:
             bodies = session.query(func.string_agg(Definition.body, "@")).scalar()
             keys = extract_keys(bodies, language)
             session.bulk_save_objects(keys)
@@ -167,7 +155,7 @@ class PostgresInterface(DatabaseInterface):
 
     @logging_time
     def link_keys(self):
-        with self.connector.session() as session:
+        with self.connector.session as session:
             for definition in DefinitionSelector().all(session):
                 keys_str = get_unique_keys_strings(definition.body)
                 keys_obj = (
@@ -186,7 +174,7 @@ class PostgresInterface(DatabaseInterface):
     def link_authors(self, data: Storage):
         authors_data = generate_authors_data(data)
 
-        with self.connector.session() as session:
+        with self.connector.session as session:
             all_authors = session.execute(select(Author)).scalars().all()
             author_by_abbr = dict(
                 (author.abbreviation, author) for author in all_authors
@@ -212,7 +200,7 @@ class PostgresInterface(DatabaseInterface):
         self.link_words(words, generate_djifoa_children)
 
     def link_words(self, words, generate_children_func):
-        with self.connector.session() as session:
+        with self.connector.session as session:
             for w in words:
                 stmt = WordSelector().filter(Word.id_old == int(w[0]))
                 parents = session.execute(stmt).scalars().all()

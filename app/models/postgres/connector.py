@@ -18,7 +18,7 @@ from sqlalchemy import create_engine, Engine
 from sqlalchemy.orm import sessionmaker, Session
 
 from app.properties import ClassName
-from app.database_interface import DatabaseConnector
+from app.connector import DatabaseConnector
 
 
 class Event(BaseEvent):
@@ -67,6 +67,7 @@ class PostgresDatabaseConnector(DatabaseConnector):
             ClassName.syllables: Syllable,
         }
 
+    @property
     def session(self) -> Session:
         return sessionmaker(bind=self.engine, future=True)()
 
