@@ -1,5 +1,5 @@
 loglan-core==0.2.5
-sqlalchemy==2.0.25
+sqlalchemy==2.0.27
 sqlalchemy-access==2.0.2
 psycopg2==2.9.9
-pyodbc==5.0.1
+pyodbc==5.1.0
