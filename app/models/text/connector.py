@@ -1,5 +1,4 @@
 # pylint: disable=missing-module-docstring, missing-class-docstring
-import datetime
 import os
 
 from sqlalchemy.orm import Session
@@ -48,13 +47,13 @@ class TextConnector(DatabaseConnector):
         raise FileNotFoundError("Directory not found. Please check your environment.")
 
     @classmethod
-    def check_files_in_directory(cls, directory: str) -> bool:
+    def check_files_in_directory(cls, directory: str):
         """
         Check if all the files in the given directory exist.
         Parameters:
             directory (str): The directory to check for files.
         Returns:
-            bool: True if all files exist, False otherwise.
+            None
         Raises:
             FileNotFoundError: If any of the files are missing.
         """
@@ -67,7 +66,6 @@ class TextConnector(DatabaseConnector):
 
         if missing_files:
             raise FileNotFoundError(f"Missing files: {', '.join(missing_files)}")
-        return True
 
     @property
     def files_paths(self) -> list[os.path]:

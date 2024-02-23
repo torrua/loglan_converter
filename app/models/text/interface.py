@@ -34,16 +34,19 @@ class TextInterface(DatabaseInterface):
             os.makedirs(full_path)
 
         for container_name in data.names:
-            lines = []
-            for item in data.container_by_name(container_name):
-                item = [str(i) if i is not None else "" for i in item]
-                lines.append(self.SEPARATOR.join(item))
-
-            file_content = "\n".join(lines)
+            file_content = self.generate_file_content(container_name, data, self.SEPARATOR)
             file_name = f"{date_marker}_{container_name}.{self.connector.EXTENSION}"
             file_path = os.path.join(full_path, file_name)
             with open(file_path, "w", encoding="utf-8") as file:
                 file.write(file_content)
+
+    @staticmethod
+    def generate_file_content(container_name, data, separator):
+        lines = []
+        for item in data.container_by_name(container_name):
+            item = [str(i) if i is not None else "" for i in item]
+            lines.append(separator.join(item))
+        return "\n".join(lines)
 
 
 if __name__ == "__main__":
