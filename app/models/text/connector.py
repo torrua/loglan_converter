@@ -1,5 +1,5 @@
 # pylint: disable=missing-module-docstring, missing-class-docstring
-
+import datetime
 import os
 
 from sqlalchemy.orm import Session
@@ -16,10 +16,11 @@ class TextConnector(DatabaseConnector):
     def session(self) -> Session:
         return None
 
-    def __init__(self, path: str):
-        self.is_path(path)
-        self.check_files_in_directory(path)
+    def __init__(self, path: str, importing: bool = False):
         self.path = path
+        self.is_path(path)
+        if not importing:
+            self.check_files_in_directory(path)
 
     def __repr__(self):
         return f'{self.__class__.__name__}(path="{self.path}")'
