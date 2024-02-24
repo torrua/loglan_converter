@@ -20,40 +20,49 @@ def check_tag_match(session: Session, extended_result: bool = False):
     Determine the discrepancy between the declared tags
     and those actually specified in the Definition
     :param session: Database session
-    :param extended_result: If True, returns an expanded dataset instead of a boolean
-    :return: Boolean or tuple, depending on the extended_result variable
+    :param extended_result: If True, prints an expanded dataset instead of a boolean value
     """
 
     definitions = DefinitionSelector().filter(Definition.case_tags != "").all(session)
+
     for definition in definitions:
         pattern_case_tags = f"[{''.join(Definition.APPROVED_CASE_TAGS)}]"
         list_tags = re.findall(pattern_case_tags, definition.case_tags)
-        list_body = [
-            tag
-            for tag in re.findall(r"\w+", definition.body)
-            if tag in Definition.APPROVED_CASE_TAGS
-        ]
-
+        list_body = get_approved_tags_from_body(definition)
         result = list_tags == list_body
 
-        if result:
+        if not result:
             continue
 
         if extended_result:
-            # print(df.source_word.name, result, list_tags, list_body)
-            if len(definition.source_word.definitions.all()) > 1 and not list_body:
-                second = (
-                    f"\n\t{definition.source_word.definitions[1].grammar}"
-                    f" {definition.source_word.definitions[1].body}"
-                )
-            else:
-                second = ""
-            print(
-                f"{definition.source_word.name},\n\t{definition.grammar}"
-                f" {definition.body}{second} >< [{definition.case_tags}]\n"
-            )
-        else:
-            print(definition.source_word.name, result)
+            print(generate_extended_result(definition))
+            continue
+
+        print(definition.source_word.name, result)
+
+
+def generate_extended_result(definition):
+    list_body = get_approved_tags_from_body(definition)
+    if len(definition.source_word.definitions.all()) > 1 and not list_body:
+        second = (
+            f"\n\t{definition.source_word.definitions[1].grammar}"
+            f" {definition.source_word.definitions[1].body}"
+        )
+    else:
+        second = ""
+    print(
+        f"{definition.source_word.name},\n\t{definition.grammar}"
+        f" {definition.body}{second} >< [{definition.case_tags}]\n"
+    )
+
+
+def get_approved_tags_from_body(definition):
+    list_body = [
+        tag
+        for tag in re.findall(r"\w+", definition.body)
+        if tag in Definition.APPROVED_CASE_TAGS
+    ]
+    return list_body
 
 
 def check_sources_primitives(session: Session):
@@ -89,14 +98,15 @@ def check_complex_sources(session: Session):
     :return:
     """
     log.info("Start checking sources of Cpxes")
-    cpx_ids_subquery = select(Type.id).where(Type.group == "Cpx").subquery()
+    cpx_ids_subquery = select(Type.id).where(Type.group == "Cpx")
     words = session.query(Word).filter(Word.type_id.in_(cpx_ids_subquery)).all()
     for word in words:
-        log.debug("Checking word: %s", word.name)
         trigger = 0
         sources = WordSourcer().get_sources_cpx(word, as_str=True)
+        log.debug("%s: %s", word.name, sources)
+
         for source in sources:
-            if not session.query(Word).filter(Word.name == source).first():
+            if not session.query(Word).filter(Word.name == source).count() == 0:
                 trigger = 1
                 print(f"Word '{source}' is not in the Dictionary")
         if trigger:
@@ -129,7 +139,7 @@ def get_list_of_lw_with_wrong_linguistic_formula(session: Session):
 
     words = WordSelector().by_type(type_="LW").all(session)
     print(len(words))
-    pattern = r"^[bcdfghjklmnprstvz]{0,1}[aoeiu]{1}[aoeiu]{0,1}$"
+    pattern = r"^([bcdfghjklmnprstvz]{0,1}[aoeiu]{1}[aoeiu]{0,1})$"
 
     for word in words:
         res = bool(re.match(pattern, word.name.lower()))
@@ -140,3 +150,14 @@ def get_list_of_lw_with_wrong_linguistic_formula(session: Session):
     print(
         len([word for word in words if not bool(re.match(pattern, word.name.lower()))])
     )
+
+
+if __name__ == "__main__":
+    from app.models.postgres.connector import PostgresDatabaseConnector
+    import os
+
+    pdc = PostgresDatabaseConnector(os.environ.get("LOD_DATABASE_URL"))
+    with pdc.session as s:
+        # check_unintelligible_ccc(session=s)
+        # get_list_of_lw_with_wrong_linguistic_formula(session=s)
+        check_complex_sources(session=s)
