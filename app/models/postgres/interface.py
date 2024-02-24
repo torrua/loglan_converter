@@ -220,7 +220,6 @@ if __name__ == "__main__":
     storage = pi.export_data()
 
     URI_IMPORT = os.environ.get("LOD_DATABASE_IMPORT")
-    pdc_import = PostgresDatabaseConnector(URI_IMPORT)
-    pdc_import.recreate_tables()
+    pdc_import = PostgresDatabaseConnector(URI_IMPORT, importing=True)
     pi_import = PostgresInterface(pdc_import)
     pi_import.import_data(storage)

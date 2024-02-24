@@ -1,11 +1,7 @@
 # pylint: disable=missing-module-docstring, missing-class-docstring, missing-function-docstring
 from app.interface import DatabaseInterface
 from app.models.access.connector import AccessDatabaseConnector
-from app.models.access.functions import (
-    db_clear_content,
-    db_compress_file,
-    get_unique_values,
-)
+from app.models.access.functions import get_unique_values
 from app.storage import Storage
 from logger import logging, logging_time
 
@@ -27,12 +23,6 @@ class AccessInterface(DatabaseInterface):
 
     @logging_time
     def import_data(self, data: Storage):
-
-        log.info("Clearing database")
-        db_clear_content(self.connector)
-
-        log.info("Compressing database")
-        db_compress_file(self.connector)
 
         log.info("Start to fill tables with dictionary data")
         model_names = self.connector.table_order.keys()
