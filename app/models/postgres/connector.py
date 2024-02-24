@@ -33,7 +33,7 @@ class Event(BaseEvent):
 
 
 class Setting(BaseSetting):
-    DATE_FORMAT = "%d.%m.%Y %H:%M:%S"
+    DATE_FORMAT = "%d.%m.%Y %H:%M:%S"  # TODO Get from settings
 
     def __init__(self, *args, **kwargs):
         date_index = 0
@@ -45,10 +45,12 @@ class Setting(BaseSetting):
 
 class PostgresDatabaseConnector(DatabaseConnector):
 
-    def __init__(self, path: str):
+    def __init__(self, path: str, importing: bool = False):
         if self.is_path(path):
             self.path = path
             self.engine: Engine = self.get_engine(self.path)
+            if importing:
+                self.recreate_tables()
 
     @classmethod
     def get_engine(cls, path: str) -> Engine:
