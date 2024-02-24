@@ -6,6 +6,9 @@ from app.models.access.interface import AccessInterface
 from app.models.postgres.connector import PostgresDatabaseConnector
 from app.models.postgres.interface import PostgresInterface
 
+from app.models.text.connector import TextConnector
+from app.models.text.interface import TextInterface
+
 
 def ac_to_pg():
     uri = os.environ.get("MDB_DATABASE_URL")
@@ -41,10 +44,10 @@ def ac_to_txt():
     storage = ai.export_data()
 
     uri_import = os.environ.get("TXT_DATABASE_IMPORT")
-    adc = AccessDatabaseConnector(uri_import)
-    ai = AccessInterface(adc)
-    ai.import_data(storage)
+    tc = TextConnector(uri_import, importing=True)
+    ti = TextInterface(tc)
+    ti.import_data(storage)
 
 
 if __name__ == "__main__":
-    pg_to_ac()
+    ac_to_txt()
