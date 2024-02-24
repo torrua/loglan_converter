@@ -279,15 +279,26 @@ def convert_element(value, types) -> Any:
         The original `value` if no matching data type is found.
     """
 
-    if not value and type(None) in types:
+    if is_none(value, types):
         return None
-    if int in types and str(value).isdigit():
+    if is_int(value, types):
         return int(str(value))
     if bool in types:
-        if isinstance(value, bool):
-            return value
-        if str(value).lower() == "true":
-            return True
-        if str(value).lower() == "false":
-            return False
+        return convert_boolean(value)
     return value
+
+
+def convert_boolean(value):
+    if str(value).lower() == "true":
+        return True
+    if str(value).lower() == "false":
+        return False
+    raise ValueError(f"Invalid boolean value: {value}")
+
+
+def is_none(value, types) -> bool:
+    return type(None) in types and not value
+
+
+def is_int(value, types) -> bool:
+    return int in types and str(value).isdigit()
