@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# pylint: disable=missing-module-docstring, missing-class-docstring, missing-function-docstring
 """
 Module for check database data
 """
