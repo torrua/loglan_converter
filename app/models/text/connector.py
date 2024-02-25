@@ -9,11 +9,10 @@ from app.connector import DatabaseConnector
 
 class TextConnector(DatabaseConnector):
     EXTENSION = "txt"
-    engine = None
 
     @property
     def session(self) -> Session:
-        return None
+        raise NotImplementedError("There is no session for TextConnector.")
 
     def __init__(self, path: str, importing: bool = False):
         self.path = path
@@ -68,7 +67,7 @@ class TextConnector(DatabaseConnector):
             raise FileNotFoundError(f"Missing files: {', '.join(missing_files)}")
 
     @property
-    def files_paths(self) -> list[os.path]:
+    def files_paths(self) -> list[str]:
         """
         Returns a list of all the files in the directory.
         Returns:
