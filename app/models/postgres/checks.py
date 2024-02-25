@@ -9,7 +9,7 @@ from loglan_core import Syllable, Type, Definition, Word
 from loglan_core.addons.definition_selector import DefinitionSelector
 from loglan_core.addons.word_selector import WordSelector
 from loglan_core.addons.word_sourcer import WordSourcer
-from sqlalchemy import any_, select
+from sqlalchemy import or_, select
 from sqlalchemy.orm import Session
 
 from logger import log
@@ -124,8 +124,7 @@ def check_unintelligible_ccc(session: Session):
         Syllable.type == "UnintelligibleCCC"
     )
     unintelligible_ccc = session.execute(unintelligible_ccc_statement).scalars().all()
-
-    ccc_filter = Word.name.like(any_([f"%{ccc}%" for ccc in unintelligible_ccc]))
+    ccc_filter = or_(*[Word.name.like(f"%{ccc}%") for ccc in unintelligible_ccc])
     words = session.execute(select(Word).filter(ccc_filter)).scalars().all()
     _ = [print(word.name) for word in words]
     log.info("Finish checking unintelligible CCC")
@@ -150,14 +149,3 @@ def get_list_of_lw_with_wrong_linguistic_formula(session: Session):
     print(
         len([word for word in words if not bool(re.match(pattern, word.name.lower()))])
     )
-
-
-if __name__ == "__main__":
-    from app.models.postgres.connector import PostgresDatabaseConnector
-    import os
-
-    pdc = PostgresDatabaseConnector(os.environ.get("LOD_DATABASE_URL"))
-    with pdc.session as s:
-        # check_unintelligible_ccc(session=s)
-        # get_list_of_lw_with_wrong_linguistic_formula(session=s)
-        check_complex_sources(session=s)
