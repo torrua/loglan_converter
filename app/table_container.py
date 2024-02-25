@@ -1,7 +1,7 @@
 # pylint: disable=missing-module-docstring, missing-class-docstring, missing-function-docstring
 from __future__ import annotations
 
-from typing import Any, Iterable, Sized, Type, get_args
+from typing import Any, Iterable, SupportsIndex, Type, get_args, overload
 
 from app.properties import TableProperties
 from logger import log
@@ -147,22 +147,31 @@ class TableContainer(list):
         """
         super().insert(index, item)
 
-    def __setitem__(self, index: int, item: Iterable[Any]):
-        """
-        Overrides the `__setitem__` method to insert an item at a given
-        index if the item is suitable for the collection.
+    @overload
+    def __setitem__(self, index: SupportsIndex, item: Any) -> None: ...
 
-        Parameters:
-            index (int): The index at which the item should be inserted.
-            item (any): The item to insert into the collection.
+    @overload
+    def __setitem__(self, s: slice, items: Iterable[Any]) -> None: ...
 
-        Raises:
-            ValueError: If the item is not suitable for the collection.
-        """
-        if self._is_item_suitable(item):
+    def __setitem__(
+        self, index: SupportsIndex | slice, item: Any | Iterable[Any]
+    ) -> None:
+        if isinstance(index, slice):
+            if not isinstance(item, Iterable):
+                raise TypeError("When using a slice, the item should be an iterable.")
+            # Ensure all items in the iterable are suitable for the collection
+            if all(self._is_item_suitable(i) for i in item):
+                super().__setitem__(index, item)
+            else:
+                raise ValueError(
+                    "One or more items are not suitable for this collection."
+                )
+        elif isinstance(index, SupportsIndex):
+            if not self._is_item_suitable(item):
+                raise ValueError("Item is not suitable for this collection.")
             super().__setitem__(index, item)
         else:
-            raise ValueError("Item is not suitable for this collection.")
+            raise IndexError("Index must be an int or slice.")
 
     def convert_item_elements(self, item: Iterable[Any]) -> list[Any]:
         """
