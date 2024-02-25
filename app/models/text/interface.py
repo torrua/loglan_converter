@@ -34,7 +34,9 @@ class TextInterface(DatabaseInterface):
             os.makedirs(full_path)
 
         for container_name in data.names:
-            file_content = self.generate_file_content(container_name, data, self.SEPARATOR)
+            file_content = self.generate_file_content(
+                container_name, data, self.SEPARATOR
+            )
             file_name = f"{date_marker}_{container_name}.{self.connector.EXTENSION}"
             file_path = os.path.join(full_path, file_name)
             with open(file_path, "w", encoding="utf-8") as file:

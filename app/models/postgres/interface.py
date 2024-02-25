@@ -39,7 +39,10 @@ class PostgresInterface(DatabaseInterface):
         return self.default_export(self.connector, self.get_data_from_objects)
 
     def get_data_from_objects(self, objects):
-        return [Exporter.export(obj, self.SEPARATOR).split(self.SEPARATOR) for obj in objects]
+        return [
+            Exporter.export(obj, self.SEPARATOR).split(self.SEPARATOR)
+            for obj in objects
+        ]
 
     @logging_time
     def import_data(self, data: Storage) -> None:

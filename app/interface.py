@@ -36,12 +36,10 @@ class DatabaseInterface(ABC):
 
     @staticmethod
     def default_export(connector: DatabaseConnector, data_getter):
-        """ Default way to export data from the database to a Storage object."""
+        """Default way to export data from the database to a Storage object."""
         s = Storage()
         with connector.session as session:
-            for container, class_ in zip(
-                s.containers, connector.table_order.values()
-            ):
+            for container, class_ in zip(s.containers, connector.table_order.values()):
                 objects = session.query(class_).all()
                 log.info("Exporting %s", class_.__name__)
 
