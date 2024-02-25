@@ -75,10 +75,7 @@ class TableContainer(list):
             bool: True if 'item' length is equal to 'number_of_items',
                 False otherwise.
         """
-        if not isinstance(item, Sized):
-            item = tuple(item)
-
-        result = len(item) == self.number_of_items
+        result = len(tuple(item)) == self.number_of_items
         log.debug("Is proper length: %s", result)
         return result
 
@@ -123,7 +120,7 @@ class TableContainer(list):
         """
         super().extend(iterable)
 
-    def insert(self, index: int, item: Iterable[Any]):
+    def insert(self, index: SupportsIndex, item: Iterable[Any]):
         """
         Inserts an item at a specified index if the item is suitable for
         this collection. Overrides the parent class insert method.
