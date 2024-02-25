@@ -11,4 +11,4 @@ jobs:
         with:
           options: "--check --verbose"
           src: "./app"
-          version: "~=24"
+          version: "~=24.2"
