@@ -47,23 +47,3 @@ class TextInterface(DatabaseInterface):
             item = [str(i) if i is not None else "" for i in item]
             lines.append(separator.join(item))
         return "\n".join(lines)
-
-
-if __name__ == "__main__":
-    uri = os.environ.get("TXT_DATABASE_URL")
-    tc = TextConnector(uri)
-
-    for name in ClassName():
-        print(tc.path_by_name(name))
-
-    ti = TextInterface(tc)
-
-    storage_with_exported_data = ti.export_data()
-
-    print(storage_with_exported_data)
-
-    uri_i = os.environ.get("TXT_DATABASE_IMPORT")
-    tc_i = TextConnector(uri_i, importing=True)
-    tii = TextInterface(tc_i)
-
-    tii.import_data(storage_with_exported_data)

@@ -209,17 +209,3 @@ class PostgresInterface(DatabaseInterface):
                     children = generate_children_func(w, session)
                     WordLinker.add_children(parent, children)
             session.commit()
-
-
-if __name__ == "__main__":
-    import os
-
-    URI = os.environ.get("LOD_DATABASE_URL")
-    pdc = PostgresDatabaseConnector(URI)
-    pi = PostgresInterface(pdc)
-    storage = pi.export_data()
-
-    URI_IMPORT = os.environ.get("LOD_DATABASE_IMPORT")
-    pdc_import = PostgresDatabaseConnector(URI_IMPORT, importing=True)
-    pi_import = PostgresInterface(pdc_import)
-    pi_import.import_data(storage)

@@ -49,16 +49,3 @@ class AccessInterface(DatabaseInterface):
                 session.commit()
                 log.info("Finish to process %s objects\n", model.__name__)
         log.info("Finish to fill tables with dictionary data\n")
-
-
-if __name__ == "__main__":
-    URI = r"C:\Users\User\Dropbox\Python\LOGLA\loglan_convert\data\LoglanDictionary.mdb"
-    adc = AccessDatabaseConnector(URI)
-    ai = AccessInterface(adc)
-    storage = ai.export_data()
-
-    URI_IMPORT = r"C:\Users\User\Dropbox\Python\LOGLA\
-        loglan_convert\data\LoglanDictionaryForImport.mdb"
-    adc_import = AccessDatabaseConnector(URI_IMPORT)
-    ai_import = AccessInterface(adc_import)
-    ai_import.import_data(storage)
