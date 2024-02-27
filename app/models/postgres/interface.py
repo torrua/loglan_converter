@@ -1,6 +1,4 @@
 # pylint: disable=missing-module-docstring, missing-class-docstring, missing-function-docstring
-import os
-
 from loglan_core import Author, Type, Word, Key, Definition, WordSelector
 from loglan_core.addons.definition_selector import DefinitionSelector
 from loglan_core.addons.exporter import Exporter
@@ -133,8 +131,8 @@ class PostgresInterface(DatabaseInterface):
                                 "word_id": word.id,
                                 "position": int(item[1]),
                                 "usage": item[2],
-                                "slots": get_grammar(item[3])["slots"],
-                                "grammar_code": get_grammar(item[3])["code"],
+                                "slots": get_grammar(item[3]).get("slots"),
+                                "grammar_code": get_grammar(item[3]).get("code"),
                                 "body": item[4],
                                 "language": language,
                                 "case_tags": item[6],
