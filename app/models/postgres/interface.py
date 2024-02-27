@@ -1,4 +1,5 @@
 # pylint: disable=missing-module-docstring, missing-class-docstring, missing-function-docstring
+import os
 
 from loglan_core import Author, Type, Word, Key, Definition, WordSelector
 from loglan_core.addons.definition_selector import DefinitionSelector
@@ -49,7 +50,7 @@ class PostgresInterface(DatabaseInterface):
         self.import_simple_classes(data)
         self.import_words(data)
         self.import_definitions(data, "en")
-        self.add_keys("en")
+        self.add_keys()
         self.link_keys()
         self.link_authors(data)
         self.link_complexes(data)
@@ -144,15 +145,18 @@ class PostgresInterface(DatabaseInterface):
             session.commit()
 
     @logging_time
-    def add_keys(self, language: str):
-        log.info(
-            "Importing %s", Key.__name__
-        )  # TODO Rewrite for getting language from definitions
-
+    def add_keys(self):
+        log.info("Importing %s", Key.__name__)
         with self.connector.session as session:
-            bodies = session.query(func.string_agg(Definition.body, "@")).scalar()
-            keys = extract_keys(bodies, language)
-            session.bulk_save_objects(keys)
+            languages = session.execute(select(Type.group.distinct())).scalars().all()
+            for language in languages:
+                bodies = (
+                    session.query(func.string_agg(Definition.body, self.SEPARATOR))
+                    .filter(Definition.language == language)
+                    .scalar()
+                )
+                keys = extract_keys(bodies, language)
+                session.bulk_save_objects(keys)
             session.commit()
         log.info("Imported %s %s items\n", len(keys), Key.__name__)
 
