@@ -48,3 +48,6 @@ class DatabaseInterface(ABC):
 
                 log.info("Exported %s %s items\n", len(container), class_.__name__)
         return s
+
+    def __repr__(self):
+        return f"{self.__class__.__name__}({self.__dict__})"
