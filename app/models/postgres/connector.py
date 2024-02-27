@@ -17,29 +17,28 @@ from loglan_core.base import BaseModel
 from sqlalchemy import create_engine, Engine
 from sqlalchemy.orm import sessionmaker, Session
 
-from app.properties import ClassName
 from app.connector import DatabaseConnector
+from app.models.common import CommonEvent, CommonSetting
+from app.properties import ClassName
 
 
 class Event(BaseEvent):
-    DATE_FORMAT = "%m/%d/%Y"
 
     def __init__(self, *args, **kwargs):
         date_index = 2
         args = list(args)
         if args and isinstance(args[date_index], str):
-            args[date_index] = datetime.strptime(args[date_index], self.DATE_FORMAT)
+            args[date_index] = datetime.strptime(args[date_index], CommonEvent.DATE_FORMAT)
         super().__init__(*args, **kwargs)
 
 
 class Setting(BaseSetting):
-    DATE_FORMAT = "%d.%m.%Y %H:%M:%S"  # TODO Get from settings
 
     def __init__(self, *args, **kwargs):
         date_index = 0
         args = list(args)
         if args and isinstance(args[date_index], str):
-            args[date_index] = datetime.strptime(args[date_index], self.DATE_FORMAT)
+            args[date_index] = datetime.strptime(args[date_index], CommonSetting.DATE_FORMAT)
         super().__init__(*args, **kwargs)
 
 

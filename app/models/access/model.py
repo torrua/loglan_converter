@@ -5,6 +5,8 @@ from datetime import datetime
 from sqlalchemy import Column, String, Integer, Text, Boolean, DateTime
 from sqlalchemy.orm import DeclarativeBase
 
+from app.models.common import CommonSetting
+
 
 class BaseModel(DeclarativeBase):
     """
@@ -178,7 +180,7 @@ class AccessSetting(BaseModel):
 
     def export_data(self):
         return [
-            self.date.strftime("%d.%m.%Y %H:%M:%S"),
+            self.date.strftime(CommonSetting.DATE_FORMAT),
             self.db_version,
             self.last_word_id,
             self.db_release,
@@ -187,7 +189,7 @@ class AccessSetting(BaseModel):
     @staticmethod
     def import_data(item: list[str]):
         return {
-            "date": datetime.strptime(item[0], "%d.%m.%Y %H:%M:%S"),
+            "date": datetime.strptime(item[0], CommonSetting.DATE_FORMAT),
             "db_version": int(item[1]),
             "last_word_id": int(item[2]),
             "db_release": item[3],
