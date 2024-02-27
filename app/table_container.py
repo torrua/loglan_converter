@@ -154,21 +154,27 @@ class TableContainer(list):
         self, index: SupportsIndex | slice, item: Any | Iterable[Any]
     ) -> None:
         if isinstance(index, slice):
-            if not isinstance(item, Iterable):
-                raise TypeError("When using a slice, the item should be an iterable.")
-            # Ensure all items in the iterable are suitable for the collection
-            if all(self._is_item_suitable(i) for i in item):
-                super().__setitem__(index, item)
-            else:
-                raise ValueError(
-                    "One or more items are not suitable for this collection."
-                )
+            self._setitem_slice(index, item)
         elif isinstance(index, SupportsIndex):
-            if not self._is_item_suitable(item):
-                raise ValueError("Item is not suitable for this collection.")
+            self._setitem_supports_index(index, item)
+        else:
+            raise IndexError("Index must be an SupportsIndex or slice.")
+
+    def _setitem_slice(self, index, item):
+        if not isinstance(item, Iterable):
+            raise TypeError("When using a slice, the item should be an iterable.")
+        # Ensure all items in the iterable are suitable for the collection
+        if all(self._is_item_suitable(i) for i in item):
             super().__setitem__(index, item)
         else:
-            raise IndexError("Index must be an int or slice.")
+            raise ValueError(
+                "One or more items are not suitable for this collection."
+            )
+
+    def _setitem_supports_index(self, index, item):
+        if not self._is_item_suitable(item):
+            raise ValueError("Item is not suitable for this collection.")
+        super().__setitem__(index, item)
 
     def convert_item_elements(self, item: Iterable[Any]) -> list[Any]:
         """
