@@ -39,88 +39,88 @@ DEFAULT_TABLE_PROPERTIES_COLLECTION = (
     TableProperties(
         ClassName.authors,
         [
-            str,  # abbreviation
-            str | None,  # full_name
-            str | None,  # notes
+            str,            # abbreviation
+            str | None,     # full_name
+            str | None,     # notes
         ],
     ),
     TableProperties(
         ClassName.events,
         [
-            int,  # event_id
-            str,  # name
-            str,  # date
-            str,  # definition
-            str | None,  # annotation
-            str | None,  # suffix
+            int,            # event_id
+            str,            # name
+            str,            # date
+            str,            # definition
+            str | None,     # annotation
+            str | None,     # suffix
         ],
     ),
     TableProperties(
         ClassName.types,
         [
-            str,  # type
-            str,  # type_x
-            str,  # group
-            bool,  # parentable
-            str | None,  # description
+            str,            # type
+            str,            # type_x
+            str,            # group
+            bool,           # parentable
+            str | None,     # description
         ],
     ),
     TableProperties(
         ClassName.words,
         [
-            int,  # old_id
-            str,  # type.type
-            str,  # type.type_x
-            str | None,  # affixes
-            str | None,  # match
-            str | None,  # source
-            str | None,  # year
-            str | None,  # rank
-            str | None,  # origin
-            str | None,  # origin_x
-            str | None,  # usedin
-            int | None,  # tid_old
+            int,            # old_id
+            str,            # type.type
+            str,            # type.type_x
+            str | None,     # affixes
+            str | None,     # match
+            str | None,     # source
+            str | None,     # year
+            str | None,     # rank
+            str | None,     # origin
+            str | None,     # origin_x
+            str | None,     # usedin
+            int | None,     # tid_old
         ],
     ),
     TableProperties(
         ClassName.word_spells,
         [
-            int,  # old_id
-            str,  # name
-            str,  # name.lower
-            str,  # code_name
-            int,  # event_start_id
-            int,  # event_end_id
-            str | None,  # origin_x
+            int,            # old_id
+            str,            # name
+            str,            # name.lower
+            str,            # code_name
+            int,            # event_start_id
+            int,            # event_end_id
+            str | None,     # origin_x
         ],
     ),
     TableProperties(
         ClassName.definitions,
         [
-            int,  # source_word.old_id
-            int,  # position
-            str | None,  # usage
-            str | None,  # grammar
-            str,  # body
-            str | None,  # main
-            str | None,  # case_tags
+            int,            # source_word.old_id
+            int,            # position
+            str | None,     # usage
+            str | None,     # grammar
+            str,            # body
+            str | None,     # main
+            str | None,     # case_tags
         ],
     ),
     TableProperties(
         ClassName.settings,
         [
-            str,  # date
-            int,  # db_version
-            int,  # last_word_id
-            str,  # db_release
+            str,            # date
+            int,            # db_version
+            int,            # last_word_id
+            str,            # db_release
         ],
     ),
     TableProperties(
         ClassName.syllables,
         [
-            str,  # name
-            str,  # type
-            bool,  # allowed
+            str,            # name
+            str,            # type
+            bool,           # allowed
         ],
     ),
 )
