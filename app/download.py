@@ -1,7 +1,9 @@
-from pathlib import Path
-from properties import ClassName
+# pylint: disable=missing-module-docstring, missing-class-docstring, missing-function-docstring
 import os
 import urllib.request
+from pathlib import Path
+
+from app.properties import ClassName
 
 
 def download_txt_to_import(output_directory: str):
