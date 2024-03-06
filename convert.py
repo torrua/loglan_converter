@@ -20,13 +20,13 @@ def generate_parser():
         description="Database Converter CLI Tool", formatter_class=RichHelpFormatter
     )
     parser.add_argument(
-        "--from-type", required=True, choices=supported_types, help="source type"
+        "from_type", choices=supported_types, help="source type"
     )
-    parser.add_argument("--from-path", required=True, help="source path")
+    parser.add_argument("from_path", help="source path")
     parser.add_argument(
-        "--to-type", required=True, choices=supported_types, help="destination type"
+        "to_type", choices=supported_types, help="destination type"
     )
-    parser.add_argument("--to-path", required=True, help="destination path")
+    parser.add_argument("to_path", help="destination path")
     return parser
 
 
