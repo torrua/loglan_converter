@@ -3,20 +3,46 @@
 [![Pylint App](https://github.com/torrua/loglan_convert/actions/workflows/pylint_app.yml/badge.svg)](https://github.com/torrua/loglan_convert/actions/workflows/pylint_app.yml)
 [![BlackLint](https://github.com/torrua/loglan_convert/actions/workflows/black.yml/badge.svg)](https://github.com/torrua/loglan_convert/actions/workflows/black.yml)
 
-# Supporting databases
-postgres, access, text
+## Supporting data types
+postgres database, access mdb file, text files
 
-# Usage
+## Usage
 Run your terminal app with following command
 
 ```bash
-python convert.py --from-type db_type --from-path FROM_PATH --to-type db_type --to-path TO_PATH
+python convert.py [-h] {postgres,access,text} from_path {postgres,access,text} to_path
 ```
-# Options
+##  Positional Arguments
 ```
-  -h, --help                                show this help message and exit
-  --from-type   {postgres,access,text}      source type
-  --from-path   FROM_PATH                   source path
-  --to-type     {postgres,access,text}      destination type
-  --to-path     TO_PATH                     destination path
+  {postgres,access,text}    source type
+  from_path                 source path
+  {postgres,access,text}    destination type
+  to_path                   destination path
+```
+
+## Options
+```  
+-h, --help            show this help message and exit
+```
+
+# Download data from GitHub source
+
+Supporting data types
+Empty Access database file, Filled Access database file, Text files
+
+## Usage
+Run your terminal app with following command
+```
+python download.py [-h] {text,empty-mdb,filled-mdb} url to-path
+```
+
+## Positional Arguments
+```
+  {text,empty-mdb,filled-mdb}   type of downloading
+  url                           URL of the file to download
+  to-path                       output directory for the downloaded file
+```
+## Options
+```
+  -h, --help                    show this help message and exit
 ```
