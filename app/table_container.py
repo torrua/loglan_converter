@@ -167,9 +167,7 @@ class TableContainer(list):
         if all(self._is_item_suitable(i) for i in item):
             super().__setitem__(index, item)
         else:
-            raise ValueError(
-                "One or more items are not suitable for this collection."
-            )
+            raise ValueError("One or more items are not suitable for this collection.")
 
     def _setitem_supports_index(self, index, item):
         if not self._is_item_suitable(item):
