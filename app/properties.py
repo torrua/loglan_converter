@@ -1,4 +1,5 @@
 # pylint: disable=missing-module-docstring, missing-class-docstring, missing-function-docstring
+# fmt: off
 
 from __future__ import annotations
 
