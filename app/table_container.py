@@ -1,4 +1,11 @@
-# pylint: disable=missing-module-docstring, missing-class-docstring, missing-function-docstring
+"""
+This module defines a class called TableContainer, which is a subclass of list.
+It represents a collection of TableProperties objects and provides additional functionality.
+
+Classes:
+    TableContainer: A list subclass representing a collection of TableProperties.
+"""
+
 from __future__ import annotations
 
 from typing import Any, Iterable, SupportsIndex, Type, get_args, overload
@@ -8,14 +15,28 @@ from logger import log
 
 
 class TableContainer(list):
+    """
+    A list subclass representing a collection of TableProperties.
+
+    Methods:
+        __init__: Initializes the object with properties from a TableProperties instance.
+        generate_containers: Generates a list of TableContainer objects
+            from a collection of TableProperties.
+        _setitem_supports_index: Sets the value of an item in the collection using its index.
+        append_directly: Appends an item to the collection without conversion.
+        extend_directly: Extends the collection without conversion.
+        number_of_items: Returns the number of items in the 'pattern' attribute.
+
+    Properties:
+        number_of_items: Property that returns the number of items in the 'pattern' attribute.
+    """
+
     def __init__(self, table_properties: TableProperties):
         """
-        Initializes the object with properties from a
-        TableProperties instance.
+        Initializes the object with properties from a TableProperties instance.
         Parameters:
-            table_properties (TableProperties): An instance of
-            TableProperties containing order, name, and pattern
-            attributes.
+            table_properties (TableProperties): An instance of TableProperties
+            containing order, name, and pattern attributes.
         """
         super().__init__()
         (
@@ -30,8 +51,8 @@ class TableContainer(list):
     @property
     def number_of_items(self) -> int:
         """
-        Property that returns the number of items in the 'pattern'
-        attribute.
+        Property that returns the number of items in the 'pattern' attribute.
+
         Returns:
             int: The number of items in the 'pattern' attribute.
         """
@@ -41,8 +62,10 @@ class TableContainer(list):
         """
         Determines if the given item is suitable based on type, length,
         and pattern type checks.
+
         Parameters:
             item (list[Any]): The item to check for suitability.
+
         Returns:
             bool: True if the item is suitable, False otherwise.
         """
@@ -56,8 +79,10 @@ class TableContainer(list):
     def is_proper_type(item: Iterable[Any]) -> bool:
         """
         Check if the passed argument is of type Iterable.
+
         Parameters:
             item (Iterable[Any]): The variable to be checked.
+
         Returns:
             bool: True if 'item' is an Iterable, False otherwise.
         """
@@ -67,10 +92,11 @@ class TableContainer(list):
 
     def is_proper_length(self, item: Iterable[Any]) -> bool:
         """
-        Checks if the given 'item' has a length equal to the
-        'number_of_items' attribute.
+        Checks if the given 'item' has a length equal to the 'number_of_items' attribute.
+
         Parameters:
             item (list[Any]): The list to check the length of.
+
         Returns:
             bool: True if 'item' length is equal to 'number_of_items',
                 False otherwise.
@@ -81,10 +107,11 @@ class TableContainer(list):
 
     def append(self, item: Iterable[Any]):
         """
-        Appends an item to the collection after conversion and
-        suitability check.
+        Appends an item to the collection after conversion and suitability check.
+
         Parameters:
             item (list[Any]): A list of elements to be converted and appended.
+
         Raises:
             ValueError: If the item is not suitable for the collection.
         """
@@ -153,6 +180,21 @@ class TableContainer(list):
     def __setitem__(
         self, index: SupportsIndex | slice, item: Any | Iterable[Any]
     ) -> None:
+        """
+        Set the value of an item in the object based on the given index.
+
+        Parameters:
+            index (SupportsIndex | slice): The index of the item to set.
+            It can be an instance of SupportsIndex or a slice.
+            item (Any | Iterable[Any]): The value to set for the item.
+            It can be a single value or an iterable of values.
+
+        Raises:
+            IndexError: If the index is not an instance of SupportsIndex or slice.
+
+        Returns:
+            None: This function does not return anything.
+        """
         if isinstance(index, slice):
             self._setitem_slice(index, item)
         elif isinstance(index, SupportsIndex):
@@ -161,6 +203,20 @@ class TableContainer(list):
             raise IndexError("Index must be an SupportsIndex or slice.")
 
     def _setitem_slice(self, index, item):
+        """
+        Set the value of a slice in the collection.
+
+        Parameters:
+            index (slice): The slice to set the value for.
+            item (Iterable): The iterable containing the items to set.
+
+        Raises:
+            TypeError: If the item is not an iterable.
+            ValueError: If one or more items in the iterable are not suitable for the collection.
+
+        Returns:
+            None: This function does not return anything.
+        """
         if not isinstance(item, Iterable):
             raise TypeError("When using a slice, the item should be an iterable.")
         # Ensure all items in the iterable are suitable for the collection
@@ -298,7 +354,19 @@ def convert_element(value, types) -> Any:
     return value
 
 
-def convert_boolean(value):
+def convert_boolean(value) -> bool:
+    """
+    Convert a string representation of a boolean to a boolean value.
+
+    Parameters:
+        value (str): The string representation of the boolean value.
+
+    Returns:
+        bool: The boolean value.
+
+    Raises:
+        ValueError: If the input value is not a valid boolean string.
+    """
     if str(value).lower() == "true":
         return True
     if str(value).lower() == "false":
@@ -307,8 +375,28 @@ def convert_boolean(value):
 
 
 def is_none(value, types) -> bool:
+    """
+    Check if the given value is None and matches any of the specified types.
+
+    Parameters:
+        value (Any): The value to check.
+        types (Tuple[Type, ...]): The types to compare against.
+
+    Returns:
+        bool: True if the value is None and matches any of the specified types, False otherwise.
+    """
     return type(None) in types and not value
 
 
 def is_int(value, types) -> bool:
+    """
+    Check if a value is an integer and belongs to a specific set of types.
+
+    Parameters:
+        value (Any): The value to check.
+        types (Set[Type]): The set of types to check against.
+
+    Returns:
+        bool: True if the value is an integer and belongs to the specified types, False otherwise.
+    """
     return int in types and str(value).isdigit()
