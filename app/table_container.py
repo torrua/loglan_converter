@@ -16,7 +16,6 @@ from app.table_container_functions import (
     prepared_types,
     convert_element,
 )
-
 from logger import log
 
 

@@ -1,5 +1,4 @@
 # pylint: disable=missing-module-docstring, missing-class-docstring, missing-function-docstring
-
 import re
 from urllib.parse import quote_plus
 
@@ -8,16 +7,14 @@ from sqlalchemy.orm import Session, sessionmaker
 
 from app.connector import DatabaseConnector
 from app.models.access.functions import db_compress_file, db_clear_content
-from app.models.access.model import (
-    AccessAuthor,
-    AccessEvent,
-    AccessSetting,
-    AccessSyllable,
-    AccessType,
-    AccessWord,
-    AccessWordSpell,
-    AccessDefinition,
-)
+from app.models.access.model.author import AccessAuthor
+from app.models.access.model.definition import AccessDefinition
+from app.models.access.model.event import AccessEvent
+from app.models.access.model.setting import AccessSetting
+from app.models.access.model.syllable import AccessSyllable
+from app.models.access.model.type import AccessType
+from app.models.access.model.word import AccessWord
+from app.models.access.model.word_spell import AccessWordSpell
 from app.properties import ClassName
 from logger import log
 

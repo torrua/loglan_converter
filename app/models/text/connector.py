@@ -3,8 +3,8 @@ import os
 
 from sqlalchemy.orm import Session
 
-from app.storage import Storage
 from app.connector import DatabaseConnector
+from app.storage import Storage
 
 
 class TextConnector(DatabaseConnector):
