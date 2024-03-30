@@ -2,6 +2,7 @@
 
 [![Pylint App](https://github.com/torrua/loglan_convert/actions/workflows/pylint_app.yml/badge.svg)](https://github.com/torrua/loglan_convert/actions/workflows/pylint_app.yml)
 [![BlackLint](https://github.com/torrua/loglan_convert/actions/workflows/black.yml/badge.svg)](https://github.com/torrua/loglan_convert/actions/workflows/black.yml)
+![Code Climate maintainability](https://img.shields.io/codeclimate/maintainability-percentage/torrua/loglan_converter?logo=Code%20Climate)
 
 ## Supporting data types
 postgres database, access mdb file, text files
