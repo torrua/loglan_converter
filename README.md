@@ -5,19 +5,19 @@
 ![Code Climate maintainability](https://img.shields.io/codeclimate/maintainability-percentage/torrua/loglan_converter?logo=Code%20Climate)
 
 ## Supporting data types
-postgres database, access mdb file, text files
+postgres database, access mdb file, prepared text files
 
 ## Usage
-Run your terminal app with following command
+Run your terminal app with following command:
 
 ```bash
-python convert.py [-h] {postgres,access,text} from_path {postgres,access,text} to_path
+python convert.py [-h] {postgres, access, text} from_path {postgres, access, text} to_path
 ```
 ##  Positional Arguments
 ```
-  {postgres,access,text}    source type
+  {postgres, access, text}  source type
   from_path                 source path
-  {postgres,access,text}    destination type
+  {postgres, access, text}  destination type
   to_path                   destination path
 ```
 
@@ -28,18 +28,21 @@ python convert.py [-h] {postgres,access,text} from_path {postgres,access,text} t
 
 # Download data from GitHub source
 
-Supporting data types
-Empty Access database file, Filled Access database file, Text files
+Supporting data types:
+
+* empty access database file
+* filled access database file
+* filled text files
 
 ## Usage
-Run your terminal app with following command
+Run your terminal app with following command:
 ```
-python download.py [-h] {text,empty-mdb,filled-mdb} url to-path
+python download.py [-h] {text, empty-mdb, filled-mdb} url to-path
 ```
 
 ## Positional Arguments
 ```
-  {text,empty-mdb,filled-mdb}   type of downloading
+  {text, empty-mdb, filled-mdb} type of downloading
   url                           URL of the file to download
   to-path                       output directory for the downloaded file
 ```
