@@ -1,6 +1,7 @@
 """
 This module contains functions that are used in the TableContainer class.
 """
+
 from __future__ import annotations
 
 from typing import Iterable, Any, Type, get_args
