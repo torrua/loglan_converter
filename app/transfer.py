@@ -9,40 +9,40 @@ from app.models.text.connector import TextConnector
 from app.models.text.interface import TextInterface
 
 
+def storage_from(path, connector, interface):
+    connector = connector(path)
+    interface = interface(connector)
+    return interface.export_data()
+
+
+def storage_to(path, storage, connector, interface):
+    connector = connector(path, importing=True)
+    interface = interface(connector)
+    interface.import_data(storage)
+
+
 def storage_from_ac(path):
-    adc = AccessDatabaseConnector(path)
-    ai = AccessInterface(adc)
-    return ai.export_data()
+    return storage_from(path, AccessDatabaseConnector, AccessInterface)
 
 
 def storage_from_pg(path):
-    pdc = PostgresDatabaseConnector(path)
-    pi = PostgresInterface(pdc)
-    return pi.export_data()
+    return storage_from(path, PostgresDatabaseConnector, PostgresInterface)
 
 
 def storage_from_txt(path):
-    tc = TextConnector(path)
-    ti = TextInterface(tc)
-    return ti.export_data()
+    return storage_from(path, TextConnector, TextInterface)
 
 
 def storage_to_ac(path, storage):
-    adc = AccessDatabaseConnector(path, importing=True)
-    ai = AccessInterface(adc)
-    ai.import_data(storage)
+    return storage_to(path, storage, AccessDatabaseConnector, AccessInterface)
 
 
 def storage_to_pg(path, storage):
-    pdc = PostgresDatabaseConnector(path, importing=True)
-    pi = PostgresInterface(pdc)
-    pi.import_data(storage)
+    return storage_to(path, storage, PostgresDatabaseConnector, PostgresInterface)
 
 
 def storage_to_txt(path, storage):
-    tc = TextConnector(path, importing=True)
-    ti = TextInterface(tc)
-    ti.import_data(storage)
+    return storage_to(path, storage, TextConnector, TextInterface)
 
 
 if __name__ == "__main__":
