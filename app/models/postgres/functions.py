@@ -1,4 +1,6 @@
 # pylint: disable=missing-module-docstring, missing-class-docstring, missing-function-docstring
+from __future__ import annotations
+
 import re
 from datetime import datetime
 
@@ -6,6 +8,7 @@ from loglan_core import Key, Word, WordSelector
 
 from app.properties import ClassName
 from app.storage import Storage
+from logger import logging_time
 
 
 def extract_keys(bodies: str, language: str) -> list[Key]:
@@ -106,6 +109,7 @@ def get_source_data_by_index(data: Storage, index: int) -> list:
     return words
 
 
+@logging_time
 def generate_complex_children(w: list, session):
     child_names = get_elements_from_str(w[10], separator=" | ")
     stmt = WordSelector().filter(Word.name.in_(child_names))
@@ -113,6 +117,7 @@ def generate_complex_children(w: list, session):
     return children
 
 
+@logging_time
 def generate_djifoa_children(w: list, session):
     djifoa = get_elements_from_str(w[3], separator=" ")
     djifoa_with_hyphen = [f"{df}-" for df in djifoa]
@@ -122,6 +127,7 @@ def generate_djifoa_children(w: list, session):
     return children
 
 
+@logging_time
 def generate_authors_data(data: Storage) -> dict:
     return {
         int(w[0]): w[5].split(" ", 1)[0].split("/")
