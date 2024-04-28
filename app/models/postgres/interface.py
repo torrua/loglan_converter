@@ -1,11 +1,12 @@
 # pylint: disable=missing-module-docstring, missing-class-docstring, missing-function-docstring
+from collections import defaultdict
+
 from loglan_core import Author, Type, Word, Key, Definition, WordSelector, WordSpell
 from loglan_core.addons.definition_selector import DefinitionSelector
 from loglan_core.addons.exporter import Exporter
-from loglan_core.addons.key_selector import KeySelector
 from loglan_core.addons.word_linker import WordLinker
 from sqlalchemy import func, select
-from collections import defaultdict
+from sqlalchemy.dialects import postgresql
 
 from app.interface import DatabaseInterface
 from app.models.postgres.connector import PostgresDatabaseConnector
@@ -69,8 +70,8 @@ class PostgresInterface(DatabaseInterface):
                 class_ = self.connector.table_order.get(class_name)
                 log.info("Importing %s", class_.__name__)
                 container = data.container_by_name(class_name)
-                objects = [class_(*item) for item in container]
-                session.bulk_save_objects(objects)
+                objects = [class_(*item).__dict__ for item in container]
+                session.execute(postgresql.insert(class_), objects)
                 session.commit()
                 log.info("Imported %s %s items\n", len(container), class_.__name__)
 
@@ -93,30 +94,28 @@ class PostgresInterface(DatabaseInterface):
         names = get_word_names(spell)
         log.info("Generating list of %s", class_.__name__)
         words = [
-            Word(
-                **{
-                    "name": names.get(index).get("name"),
-                    "event_start_id": names.get(index).get("event_start_id"),
-                    "event_end_id": names.get(index).get("event_end_id"),
-                    "id_old": data.get(index[1]).get("id_old"),
-                    "origin": data.get(index[1]).get("origin"),
-                    "origin_x": data.get(index[1]).get("origin_x"),
-                    "type_id": data.get(index[1]).get("type_id"),
-                    "match": data.get(index[1]).get("match"),
-                    "rank": data.get(index[1]).get("rank"),
-                    "year": data.get(index[1]).get("year"),
-                    "notes": data.get(index[1]).get("notes"),
-                    "tid_old": data.get(index[1]).get("tid_old"),
-                }
-            )
+            {
+                "name": names.get(index).get("name"),
+                "event_start_id": names.get(index).get("event_start_id"),
+                "event_end_id": names.get(index).get("event_end_id"),
+                "id_old": data.get(index[1]).get("id_old"),
+                "origin": data.get(index[1]).get("origin"),
+                "origin_x": data.get(index[1]).get("origin_x"),
+                "type_id": data.get(index[1]).get("type_id"),
+                "match": data.get(index[1]).get("match"),
+                "rank": data.get(index[1]).get("rank"),
+                "year": data.get(index[1]).get("year"),
+                "notes": data.get(index[1]).get("notes"),
+                "tid_old": data.get(index[1]).get("tid_old"),
+            }
             for index in names.keys()
         ]
         log.info("Sorting list of %s", class_.__name__)
-        words.sort(key=lambda x: x.name)
+        words.sort(key=lambda x: x["name"])
 
         with self.connector.session as session:
             log.info("Saving list of %s to database", class_.__name__)
-            session.bulk_save_objects(words)
+            session.execute(postgresql.insert(class_), words)
             session.commit()
 
         log.info("Imported %s %s items\n", len(words), class_.__name__)
@@ -147,33 +146,25 @@ class PostgresInterface(DatabaseInterface):
 
         all_definitions = []
         words = self._generate_word_id_name_dict()
-        count_of_definitions = len(definitions)
 
         with self.connector.session as session:
             for index, item in enumerate(definitions, 1):
                 words_of_definition = words.get(int(item[0]))
                 for word in words_of_definition:
                     wid, name = word
-                    """
-                    log.info(
-                        "Importing definition %s/%s for %s",
-                        index, count_of_definitions, name
-                    )"""
                     all_definitions.append(
-                        Definition(
-                            **{
-                                "word_id": wid,
-                                "position": int(item[1]),
-                                "usage": item[2],
-                                "slots": get_grammar(item[3]).get("slots"),
-                                "grammar_code": get_grammar(item[3]).get("code"),
-                                "body": item[4],
-                                "language": language,
-                                "case_tags": item[6],
-                            }
-                        )
+                        {
+                            "word_id": wid,
+                            "position": int(item[1]),
+                            "usage": item[2],
+                            "slots": get_grammar(item[3]).get("slots"),
+                            "grammar_code": get_grammar(item[3]).get("code"),
+                            "body": item[4],
+                            "language": language,
+                            "case_tags": item[6],
+                        }
                     )
-            session.bulk_save_objects(all_definitions)
+            session.execute(postgresql.insert(Definition), all_definitions)
             session.commit()
 
     @logging_time
@@ -190,7 +181,7 @@ class PostgresInterface(DatabaseInterface):
                     .scalar()
                 )
                 keys = extract_keys(bodies, language)
-                session.bulk_save_objects(keys)
+                session.execute(postgresql.insert(Key), keys)
             session.commit()
         log.info("Imported %s %s items\n", len(keys), Key.__name__)
 
@@ -198,15 +189,19 @@ class PostgresInterface(DatabaseInterface):
     def link_keys(self):
         log.info("Linking %s", Key.__name__)
         with self.connector.session as session:
-            languages = session.execute(select(Definition.language.distinct())).scalars().all()
+            languages = (
+                session.execute(select(Definition.language.distinct())).scalars().all()
+            )
             for language in languages:
-                keys = KeySelector().by_language(language).all(session)
-                for definition in (
-                    DefinitionSelector().by_language(language).all(session)
-                ):
-                    log.info("Linking %s", definition.id)
+                keys = session.execute(
+                    select(Key.word, Key).filter(Key.language == language)
+                ).all()
+                keys = dict(keys)
+                definitions = DefinitionSelector().by_language(language).all(session)
+
+                for definition in definitions:
                     keys_str = get_unique_keys_strings(definition.body)
-                    keys_obj = [key for key in keys if key.word in keys_str]
+                    keys_obj = [keys.get(key) for key in keys_str]
                     definition.keys_query.extend(keys_obj)
             session.commit()
 
@@ -224,7 +219,7 @@ class PostgresInterface(DatabaseInterface):
             for word in WordSelector().all(session):
                 authors_abbrs = authors_data[word.id_old]
                 authors = [author_by_abbr[abbr] for abbr in authors_abbrs]
-                WordLinker.add_authors(word, authors)
+                word.authors_query.extend(authors)
 
             session.commit()
 

@@ -22,7 +22,7 @@ def logging_time(func):
         start_time = time.time()
         log.info(
             f"{func.__name__} - Start time:"
-            f" {time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(start_time))}\n"
+            f" {time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(start_time))}"
         )
         result = func(*args, **kwargs)
         end_time = time.time()
