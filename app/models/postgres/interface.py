@@ -245,5 +245,5 @@ class PostgresInterface(DatabaseInterface):
 
                 for parent in parents:
                     children = generate_children_func(w, session)
-                    WordLinker.add_children(parent, children)
+                    parent.derivatives_query.extend(children)
             session.commit()
