@@ -4,9 +4,7 @@ from collections import defaultdict
 from loglan_core import Author, Type, Word, Key, Definition, WordSelector, WordSpell
 from loglan_core.addons.definition_selector import DefinitionSelector
 from loglan_core.addons.exporter import Exporter
-from loglan_core.addons.word_linker import WordLinker
 from sqlalchemy import func, select
-from sqlalchemy.dialects import postgresql
 
 from app.interface import DatabaseInterface
 from app.models.postgres.connector import PostgresDatabaseConnector
@@ -71,7 +69,7 @@ class PostgresInterface(DatabaseInterface):
                 log.info("Importing %s", class_.__name__)
                 container = data.container_by_name(class_name)
                 objects = [class_(*item).__dict__ for item in container]
-                session.execute(postgresql.insert(class_), objects)
+                session.bulk_insert_mappings(class_, objects)
                 session.commit()
                 log.info("Imported %s %s items\n", len(container), class_.__name__)
 
@@ -115,7 +113,7 @@ class PostgresInterface(DatabaseInterface):
 
         with self.connector.session as session:
             log.info("Saving list of %s to database", class_.__name__)
-            session.execute(postgresql.insert(class_), words)
+            session.bulk_insert_mappings(class_, words)
             session.commit()
 
         log.info("Imported %s %s items\n", len(words), class_.__name__)
@@ -164,7 +162,7 @@ class PostgresInterface(DatabaseInterface):
                             "case_tags": item[6],
                         }
                     )
-            session.execute(postgresql.insert(Definition), all_definitions)
+            session.bulk_insert_mappings(Definition, all_definitions)
             session.commit()
 
     @logging_time
@@ -181,7 +179,7 @@ class PostgresInterface(DatabaseInterface):
                     .scalar()
                 )
                 keys = extract_keys(bodies, language)
-                session.execute(postgresql.insert(Key), keys)
+                session.bulk_insert_mappings(Key, keys)
             session.commit()
         log.info("Imported %s %s items\n", len(keys), Key.__name__)
 
