@@ -1,7 +1,7 @@
 # pylint: disable=missing-module-docstring, missing-class-docstring, missing-function-docstring
 from collections import defaultdict
 
-from loglan_core import Author, Type, Word, Key, Definition, WordSelector, WordSpell, KeySelector
+from loglan_core import Author, Type, Word, Key, Definition, WordSelector, WordSpell
 from loglan_core.addons.definition_selector import DefinitionSelector
 from loglan_core.addons.exporter import Exporter
 from sqlalchemy import func, select
@@ -162,7 +162,10 @@ class PostgresInterface(DatabaseInterface):
                             "case_tags": item[6],
                         }
                     )
-            session.bulk_insert_mappings(Definition.__mapper__, all_definitions, )
+            session.bulk_insert_mappings(
+                Definition.__mapper__,
+                all_definitions,
+            )
             session.commit()
 
     @logging_time

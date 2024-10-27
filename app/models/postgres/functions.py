@@ -118,7 +118,12 @@ def generate_djifoa_children(w: list, session):
     djifoa = get_elements_from_str(w[3], separator=" ")
     djifoa_with_hyphen = [f"{df}-" for df in djifoa]
     all_djifoa = djifoa + djifoa_with_hyphen
-    children = WordSelector().by_type(type_="Afx").filter(Word.name.in_(all_djifoa)).all(session)
+    children = (
+        WordSelector()
+        .by_type(type_="Afx")
+        .filter(Word.name.in_(all_djifoa))
+        .all(session)
+    )
     return children
 
 
