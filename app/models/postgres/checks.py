@@ -71,7 +71,7 @@ def check_sources_primitives(session: Session):
     :return:
     """
 
-    c_type = session.query(Type).filter(Type.type == "C-Prim").scalar()
+    c_type = session.query(Type).filter(Type.type_ == "C-Prim").scalar()
     words = (
         session.query(Word)
         .filter(Word.type_id == c_type.id)
@@ -87,7 +87,7 @@ def check_sources_prim_d(session: Session):
     :return:
     """
 
-    d_type = session.query(Type).filter(Type.type == "D-Prim").first()
+    d_type = session.query(Type).filter(Type.type_ == "D-Prim").first()
     words = session.query(Word).filter(Word.type_id == d_type.id).all()
     _ = [print(WordSourcer().get_sources_prim(word)) for word in words]
 

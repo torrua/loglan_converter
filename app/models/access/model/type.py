@@ -13,7 +13,7 @@ class AccessType(BaseModel):
     sort_name = "Type"
 
     id = Column(Integer, primary_key=True)
-    type = Column(String(16), nullable=False)
+    type_ = Column("type", String(16), nullable=False)
     type_x = Column(String(16), nullable=False)
     group = Column(String(16), nullable=False)
     parentable = Column(Boolean, nullable=False)
@@ -21,7 +21,7 @@ class AccessType(BaseModel):
 
     def export_data(self):
         return [
-            self.type,
+            self.type_,
             self.type_x,
             self.group,
             self.parentable,
@@ -31,7 +31,7 @@ class AccessType(BaseModel):
     @classmethod
     def import_data(cls, item: list[str]):
         return {
-            "type": item[0],
+            "type_": item[0],
             "type_x": item[1],
             "group": cls.von(item[2]),
             "parentable": item[3],

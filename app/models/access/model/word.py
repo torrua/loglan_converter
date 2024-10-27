@@ -13,7 +13,7 @@ class AccessWord(BaseModel):
     sort_name = "Word"
 
     word_id = Column("WID", Integer, nullable=False, primary_key=True)
-    type = Column("Type", String(16), nullable=False)
+    type_ = Column("Type", String(16), nullable=False)
     type_x = Column("XType", String(16), nullable=False)
     affixes = Column("Affixes", String(16))
     match = Column("Match", String(8))
@@ -32,7 +32,7 @@ class AccessWord(BaseModel):
         """
         return [
             self.word_id,
-            self.type,
+            self.type_,
             self.type_x,
             self.ves(self.affixes),
             self.ves(self.match),
@@ -49,7 +49,7 @@ class AccessWord(BaseModel):
     def import_data(cls, item: list[str]):
         return {
             "word_id": int(item[0]),
-            "type": item[1],
+            "type_": item[1],
             "type_x": item[2],
             "affixes": cls.von(item[3]),
             "match": cls.von(item[4]),
