@@ -59,7 +59,7 @@ DEFAULT_TABLE_PROPERTIES_COLLECTION = (
     TableProperties(
         ClassName.types,
         [
-            str,            # type
+            str,            # type_
             str,            # type_x
             str,            # group
             bool,           # parentable
@@ -70,7 +70,7 @@ DEFAULT_TABLE_PROPERTIES_COLLECTION = (
         ClassName.words,
         [
             int,            # old_id
-            str,            # type.type
+            str,            # type.type_
             str,            # type.type_x
             str | None,     # affixes
             str | None,     # match

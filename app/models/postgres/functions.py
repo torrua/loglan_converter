@@ -110,8 +110,7 @@ def get_source_data_by_index(data: Storage, index: int) -> list:
 
 def generate_complex_children(w: list, session):
     child_names = get_elements_from_str(w[10], separator=" | ")
-    stmt = WordSelector().filter(Word.name.in_(child_names))
-    children = list(session.execute(stmt).scalars().all())
+    children = WordSelector().filter(Word.name.in_(child_names)).all(session)
     return children
 
 
@@ -119,8 +118,7 @@ def generate_djifoa_children(w: list, session):
     djifoa = get_elements_from_str(w[3], separator=" ")
     djifoa_with_hyphen = [f"{df}-" for df in djifoa]
     all_djifoa = djifoa + djifoa_with_hyphen
-    stmt = WordSelector().by_type(type_="Afx").filter(Word.name.in_(all_djifoa))
-    children = list(session.execute(stmt).scalars().all())
+    children = WordSelector().by_type(type_="Afx").filter(Word.name.in_(all_djifoa)).all(session)
     return children
 
 

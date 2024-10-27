@@ -1,7 +1,7 @@
 # pylint: disable=missing-module-docstring, missing-class-docstring, missing-function-docstring
 from collections import defaultdict
 
-from loglan_core import Author, Type, Word, Key, Definition, WordSelector, WordSpell
+from loglan_core import Author, Type, Word, Key, Definition, WordSelector, WordSpell, KeySelector
 from loglan_core.addons.definition_selector import DefinitionSelector
 from loglan_core.addons.exporter import Exporter
 from sqlalchemy import func, select
@@ -69,7 +69,7 @@ class PostgresInterface(DatabaseInterface):
                 log.info("Importing %s", class_.__name__)
                 container = data.container_by_name(class_name)
                 objects = [class_(*item).__dict__ for item in container]
-                session.bulk_insert_mappings(class_, objects)
+                session.bulk_insert_mappings(class_.__mapper__, objects)
                 session.commit()
                 log.info("Imported %s %s items\n", len(container), class_.__name__)
 
@@ -85,8 +85,8 @@ class PostgresInterface(DatabaseInterface):
 
         with self.connector.session as session:
             log.info("Getting %s for words", Type.__name__)
-            types_data = session.query(Type.type, Type.id).all()
-            types = dict((item.type, item.id) for item in types_data)
+            types_data = session.query(Type.type_, Type.id).all()
+            types = dict((item.type_, item.id) for item in types_data)
 
         data = get_word_data(words, types)
         names = get_word_names(spell)
@@ -113,7 +113,7 @@ class PostgresInterface(DatabaseInterface):
 
         with self.connector.session as session:
             log.info("Saving list of %s to database", class_.__name__)
-            session.bulk_insert_mappings(class_, words)
+            session.bulk_insert_mappings(class_.__mapper__, words)
             session.commit()
 
         log.info("Imported %s %s items\n", len(words), class_.__name__)
@@ -162,7 +162,7 @@ class PostgresInterface(DatabaseInterface):
                             "case_tags": item[6],
                         }
                     )
-            session.bulk_insert_mappings(Definition, all_definitions)
+            session.bulk_insert_mappings(Definition.__mapper__, all_definitions, )
             session.commit()
 
     @logging_time
@@ -179,7 +179,7 @@ class PostgresInterface(DatabaseInterface):
                     .scalar()
                 )
                 keys = extract_keys(bodies, language)
-                session.bulk_insert_mappings(Key, keys)
+                session.bulk_insert_mappings(Key.__mapper__, keys)
             session.commit()
         log.info("Imported %s %s items\n", len(keys), Key.__name__)
 
@@ -200,7 +200,7 @@ class PostgresInterface(DatabaseInterface):
                 for definition in definitions:
                     keys_str = get_unique_keys_strings(definition.body)
                     keys_obj = [keys.get(key) for key in keys_str]
-                    definition.keys_query.extend(keys_obj)
+                    definition.keys.extend(keys_obj)
             session.commit()
 
     @logging_time
@@ -217,7 +217,7 @@ class PostgresInterface(DatabaseInterface):
             for word in WordSelector().all(session):
                 authors_abbrs = authors_data[word.id_old]
                 authors = [author_by_abbr[abbr] for abbr in authors_abbrs]
-                word.authors_query.extend(authors)
+                word.authors.extend(authors)
 
             session.commit()
 
@@ -238,10 +238,9 @@ class PostgresInterface(DatabaseInterface):
     def link_words(self, words, generate_children_func):
         with self.connector.session as session:
             for w in words:
-                stmt = WordSelector().filter(Word.id_old == int(w[0]))
-                parents = session.execute(stmt).scalars().all()
+                parents = WordSelector().filter(Word.id_old == int(w[0])).all(session)
 
                 for parent in parents:
                     children = generate_children_func(w, session)
-                    parent.derivatives_query.extend(children)
+                    parent.derivatives.extend(children)
             session.commit()
