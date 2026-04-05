@@ -9,7 +9,9 @@ def download_file(download_type, to_path, url):
 
 
 def generate_parser():
-    parser = argparse.ArgumentParser(description="File downloader", formatter_class=RichHelpFormatter)
+    parser = argparse.ArgumentParser(
+        description="File downloader", formatter_class=RichHelpFormatter
+    )
     parser.add_argument(
         "download-type",
         choices=SUPPORTED_TYPES,
