@@ -78,9 +78,7 @@ class SQLiteDatabaseConnector(DatabaseConnector):
     @staticmethod
     def is_path(path: str) -> bool:
         if not path:
-            raise ValueError(
-                "No SQLite path provided. Please check your environment."
-            )
+            raise ValueError("No SQLite path provided. Please check your environment.")
 
         if path == ":memory:":
             return True

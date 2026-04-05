@@ -1,4 +1,5 @@
 """Tests for SQLite connector, interface, and wiring."""
+
 import os
 import tempfile
 import pytest
@@ -14,20 +15,24 @@ class TestSQLiteDatabaseConnector:
 
     def test_import_connector(self):
         from app.models.sqlite.connector import SQLiteDatabaseConnector
+
         assert SQLiteDatabaseConnector is not None
 
     def test_connector_is_database_connector_subclass(self):
         from app.models.sqlite.connector import SQLiteDatabaseConnector
+
         assert issubclass(SQLiteDatabaseConnector, DatabaseConnector)
 
     def test_instantiate_with_memory(self):
         from app.models.sqlite.connector import SQLiteDatabaseConnector
+
         conn = SQLiteDatabaseConnector(":memory:")
         assert conn.path == ":memory:"
         assert conn.engine is not None
 
     def test_table_order_has_8_mappings(self):
         from app.models.sqlite.connector import SQLiteDatabaseConnector
+
         conn = SQLiteDatabaseConnector(":memory:")
         assert len(conn.table_order) == 8
         assert ClassName.authors in conn.table_order
@@ -41,40 +46,48 @@ class TestSQLiteDatabaseConnector:
 
     def test_session_returns_session(self):
         from app.models.sqlite.connector import SQLiteDatabaseConnector
+
         conn = SQLiteDatabaseConnector(":memory:")
         session = conn.session
         assert session is not None
 
     def test_is_path_validates_memory(self):
         from app.models.sqlite.connector import SQLiteDatabaseConnector
+
         assert SQLiteDatabaseConnector.is_path(":memory:") is True
 
     def test_is_path_validates_db_extension(self):
         from app.models.sqlite.connector import SQLiteDatabaseConnector
+
         assert SQLiteDatabaseConnector.is_path("test.db") is True
 
     def test_is_path_validates_sqlite_extension(self):
         from app.models.sqlite.connector import SQLiteDatabaseConnector
+
         assert SQLiteDatabaseConnector.is_path("test.sqlite") is True
 
     def test_is_path_rejects_empty(self):
         from app.models.sqlite.connector import SQLiteDatabaseConnector
+
         with pytest.raises(ValueError, match="No SQLite path"):
             SQLiteDatabaseConnector.is_path("")
 
     def test_is_path_rejects_no_extension(self):
         from app.models.sqlite.connector import SQLiteDatabaseConnector
+
         with pytest.raises(ValueError, match="Invalid SQLite path"):
             SQLiteDatabaseConnector.is_path("test.txt")
 
     def test_is_path_rejects_postgres_uri(self):
         from app.models.sqlite.connector import SQLiteDatabaseConnector
+
         with pytest.raises(ValueError, match="Invalid SQLite path"):
             SQLiteDatabaseConnector.is_path("postgresql://localhost/db")
 
     def test_recreate_tables_creates_tables(self):
         from app.models.sqlite.connector import SQLiteDatabaseConnector
         from sqlalchemy import inspect
+
         conn = SQLiteDatabaseConnector(":memory:", importing=True)
         inspector = inspect(conn.engine)
         tables = inspector.get_table_names()
@@ -82,6 +95,7 @@ class TestSQLiteDatabaseConnector:
 
     def test_get_engine_uses_sqlite_prefix(self):
         from app.models.sqlite.connector import SQLiteDatabaseConnector
+
         engine = SQLiteDatabaseConnector.get_engine(":memory:")
         assert "sqlite" in str(engine.url)
 
@@ -91,15 +105,18 @@ class TestSQLiteInterface:
 
     def test_import_interface(self):
         from app.models.sqlite.interface import SQLiteInterface
+
         assert SQLiteInterface is not None
 
     def test_interface_is_database_interface_subclass(self):
         from app.models.sqlite.interface import SQLiteInterface
+
         assert issubclass(SQLiteInterface, DatabaseInterface)
 
     def test_instantiate_interface(self):
         from app.models.sqlite.interface import SQLiteInterface
         from app.models.sqlite.connector import SQLiteDatabaseConnector
+
         conn = SQLiteDatabaseConnector(":memory:")
         iface = SQLiteInterface(conn)
         assert iface.connector is conn
@@ -107,6 +124,7 @@ class TestSQLiteInterface:
     def test_has_export_data_method(self):
         from app.models.sqlite.interface import SQLiteInterface
         from app.models.sqlite.connector import SQLiteDatabaseConnector
+
         conn = SQLiteDatabaseConnector(":memory:", importing=True)
         iface = SQLiteInterface(conn)
         assert hasattr(iface, "export_data")
@@ -115,6 +133,7 @@ class TestSQLiteInterface:
     def test_has_import_data_method(self):
         from app.models.sqlite.interface import SQLiteInterface
         from app.models.sqlite.connector import SQLiteDatabaseConnector
+
         conn = SQLiteDatabaseConnector(":memory:", importing=True)
         iface = SQLiteInterface(conn)
         assert hasattr(iface, "import_data")
@@ -123,6 +142,7 @@ class TestSQLiteInterface:
     def test_has_all_import_helper_methods(self):
         from app.models.sqlite.interface import SQLiteInterface
         from app.models.sqlite.connector import SQLiteDatabaseConnector
+
         conn = SQLiteDatabaseConnector(":memory:", importing=True)
         iface = SQLiteInterface(conn)
         for method in [
@@ -140,6 +160,7 @@ class TestSQLiteInterface:
     def test_export_data_returns_storage(self):
         from app.models.sqlite.interface import SQLiteInterface
         from app.models.sqlite.connector import SQLiteDatabaseConnector
+
         conn = SQLiteDatabaseConnector(":memory:", importing=True)
         iface = SQLiteInterface(conn)
         result = iface.export_data()
@@ -148,6 +169,7 @@ class TestSQLiteInterface:
     def test_import_data_with_empty_storage(self):
         from app.models.sqlite.interface import SQLiteInterface
         from app.models.sqlite.connector import SQLiteDatabaseConnector
+
         conn = SQLiteDatabaseConnector(":memory:", importing=True)
         iface = SQLiteInterface(conn)
         storage = Storage()
@@ -179,15 +201,18 @@ class TestTransferWiring:
 
     def test_import_storage_from_sqlite(self):
         from app.transfer import storage_from_sqlite
+
         assert callable(storage_from_sqlite)
 
     def test_import_storage_to_sqlite(self):
         from app.transfer import storage_to_sqlite
+
         assert callable(storage_to_sqlite)
 
     def test_storage_to_sqlite_with_empty_storage(self, tmp_path):
         from app.transfer import storage_to_sqlite
         from app.storage import Storage
+
         db_path = str(tmp_path / "test.db")
         storage = Storage()
         storage_to_sqlite(db_path, storage)
@@ -199,6 +224,7 @@ class TestCLIWiring:
 
     def test_sqlite_in_supported_types(self):
         from convert import generate_parser
+
         parser = generate_parser()
         action = None
         for a in parser._actions:
@@ -210,6 +236,7 @@ class TestCLIWiring:
 
     def test_all_four_types_in_cli(self):
         from convert import generate_parser
+
         parser = generate_parser()
         for action in parser._actions:
             if action.dest in ("from_type", "to_type"):
@@ -255,6 +282,7 @@ class TestSQLiteSpecificSQL:
         """Verify add_keys uses group_concat (SQLite) not string_agg (PostgreSQL)."""
         import inspect
         from app.models.sqlite.interface import SQLiteInterface
+
         source = inspect.getsource(SQLiteInterface.add_keys)
         assert "group_concat" in source
         assert "string_agg" not in source

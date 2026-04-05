@@ -21,13 +21,9 @@ def generate_parser():
     parser = argparse.ArgumentParser(
         description="Database Converter CLI Tool", formatter_class=RichHelpFormatter
     )
-    parser.add_argument(
-        "from_type", choices=supported_types, help="source type"
-    )
+    parser.add_argument("from_type", choices=supported_types, help="source type")
     parser.add_argument("from_path", help="source path")
-    parser.add_argument(
-        "to_type", choices=supported_types, help="destination type"
-    )
+    parser.add_argument("to_type", choices=supported_types, help="destination type")
     parser.add_argument("to_path", help="destination path")
     return parser
 
