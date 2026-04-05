@@ -8,6 +8,9 @@ from app.models.postgres.interface import PostgresInterface
 from app.models.text.connector import TextConnector
 from app.models.text.interface import TextInterface
 
+from app.models.sqlite.connector import SQLiteDatabaseConnector
+from app.models.sqlite.interface import SQLiteInterface
+
 
 def storage_from(path, connector, interface):
     connector = connector(path)
@@ -43,6 +46,14 @@ def storage_to_pg(path, storage):
 
 def storage_to_txt(path, storage):
     return storage_to(path, storage, TextConnector, TextInterface)
+
+
+def storage_from_sqlite(path):
+    return storage_from(path, SQLiteDatabaseConnector, SQLiteInterface)
+
+
+def storage_to_sqlite(path, storage):
+    return storage_to(path, storage, SQLiteDatabaseConnector, SQLiteInterface)
 
 
 if __name__ == "__main__":

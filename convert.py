@@ -6,15 +6,17 @@ from app.transfer import (
     storage_from_ac,
     storage_from_pg,
     storage_from_txt,
+    storage_from_sqlite,
     storage_to_ac,
     storage_to_pg,
     storage_to_txt,
+    storage_to_sqlite,
 )
 
 
 def generate_parser():
 
-    supported_types = ["postgres", "access", "text"]
+    supported_types = ["postgres", "access", "text", "sqlite"]
 
     parser = argparse.ArgumentParser(
         description="Database Converter CLI Tool", formatter_class=RichHelpFormatter
@@ -36,11 +38,13 @@ def db_converter(from_type, from_path, to_type, to_path):
         "access": storage_from_ac,
         "postgres": storage_from_pg,
         "text": storage_from_txt,
+        "sqlite": storage_from_sqlite,
     }
     to_functions = {
         "access": storage_to_ac,
         "postgres": storage_to_pg,
         "text": storage_to_txt,
+        "sqlite": storage_to_sqlite,
     }
 
     if from_type not in from_functions or to_type not in to_functions:
